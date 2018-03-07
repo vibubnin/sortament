@@ -1,0 +1,14 @@
+{
+  "name": "sortament",
+  "version": "1.0.0",
+  "description": "Handbook of varieties of rolled metal",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Viktor Bubnin",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.2"
+  }
+}

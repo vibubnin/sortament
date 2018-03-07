@@ -1,0 +1,38 @@
+<mvc:View 
+  controllerName="sortament.sortaments.controller.SortamentMaster"
+  xmlns:l="sap.ui.layout"
+  xmlns="sap.m"
+  xmlns:mvc="sap.ui.core.mvc"
+  displayBlock="true">
+  <Page 
+  	title="Каталоги металлопроката">
+  	<subHeader>
+			<Toolbar>
+				<SearchField 
+					liveChange="onSearchSortament"
+					width="100%"/>
+			</Toolbar>
+		</subHeader>
+		<content>
+			<List
+				id="sortamentList"
+				items="{
+					path: 'sortaments>/',
+					sorter: {
+				    path: 'category',
+				    group: true
+			    }
+		  	}"
+				selectionChange="onSelectSortament"
+				mode="SingleSelectMaster"
+				class="sortamentList">
+				<items>
+					<StandardListItem
+						class="sortamentItem"
+						tooltip="{sortaments>name}"
+						title="{sortaments>name}"/>
+				</items>
+			</List>
+		</content>
+  </Page>
+</mvc:View>
