@@ -30,7 +30,7 @@
 					</headerToolbar>
 					<columns>
 						<Column>
-							<Text text="Тип"/>
+							<Text text="Сечение"/>
 						</Column>
 						<Column>
 							<VBox>
