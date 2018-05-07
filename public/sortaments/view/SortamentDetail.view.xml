@@ -1,6 +1,7 @@
 <mvc:View 
   controllerName="sortament.sortaments.controller.SortamentDetail"
   xmlns:l="sap.ui.layout"
+  xmlns:u="sap.ui.unified"
   xmlns="sap.m"
   xmlns:mvc="sap.ui.core.mvc"
   displayBlock="true">
@@ -24,13 +25,16 @@
 						<Toolbar height="2rem">
 							<content>
 								<ToolbarSpacer />
-								<Button type="Transparent" icon="sap-icon://download" press="onSortamentDownload" />
+								<Button 
+									type="Transparent" 
+									icon="sap-icon://download" 
+									press="onOpenSizeCatalogDialog" />
 							</content>
 						</Toolbar>
 					</headerToolbar>
 					<columns>
 						<Column>
-							<Text text="Сечение"/>
+							<Text text="Тип"/>
 						</Column>
 						<Column>
 							<VBox>

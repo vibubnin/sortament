@@ -1,11 +1,16 @@
 sap.ui.define([
-  "sap/ui/core/mvc/Controller"
-], function (Controller) {
+  'sap/ui/core/mvc/Controller',
+  'sap/ui/model/json/JSONModel',
+  'sap/m/Popover'
+], function (Controller, JSONModel, Popover) {
   "use strict";
   return Controller.extend("sortament.sortaments.controller.SortamentDetail", {
     onInit: function () {
       var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
-      oRouter.getRoute("selectedSortament").attachPatternMatched(this._onSortamentDetailMatched, this)
+      oRouter.getRoute("selectedSortament").attachPatternMatched(this._onSortamentDetailMatched, this);
+
+      this.mCatalogSizeModel = new JSONModel();
+      this.getView().setModel(this.mCatalogSizeModel, 'mCatalogSize');
     },
 
     _onSortamentDetailMatched: function (oEvent) {
@@ -46,6 +51,77 @@ sap.ui.define([
       document.body.appendChild(element);
       element.click();
       document.body.removeChild(element)
+    },
+
+    onChangeFile: function(oEvent) {
+      var sValue = oEvent.getParameter('newValue');
+      if (sValue) {
+      }
+    },
+
+    handleUploadComplete: function(oEvent) {
+      var sData = oEvent.getParameter("response");
+      
+      var aData = sData.split('\n');
+      
+      var aMeta = aData[0].split(',');
+      aMeta[0] = 'Тип##';
+
+      var aRow = aData[1].split(',');
+
+      this.mCatalogSizeModel.setData({
+        meta: aMeta,
+        row: aRow
+      });
+
+			
+    },
+    
+    handleLabelFtr: function(sLabel) {
+      return sLabel.slice(0,sLabel.indexOf('##'));
+    },
+
+		handleUploadPress: function(oEvent) {
+			var oFileUploader = this.byId("fileUploader");
+			oFileUploader.upload();
+    },
+    
+    onOpenSizeCatalogDialog: function() {
+      var oView = this.getView();
+      var oDialog = oView.byId("sizeCatalogDialog");
+
+      if (!oDialog) {
+        oDialog = sap.ui.xmlfragment(oView.getId(), "sortament.sortaments.view.SizeCatalog", this);
+        oDialog.addStyleClass(this.getOwnerComponent().getContentDensityClass());
+        oView.addDependent(oDialog);
+      }
+
+      oDialog.open();
+    },
+
+    onCloseSizeCatalogDialog: function() {
+      this.getView().byId("sizeCatalogDialog").close();
+    },
+
+    handleMessagePopoverPress: function (oEvent) {
+      if (!this._oPopover) {
+        this._oPopover = new Popover({
+          placement: 'PreferredBottomOrFlip',
+          contentWidth: '16rem',
+          showHeader: false,
+          content: [
+            new sap.m.Text({
+              text: 'Соотнесите названия заголовков сортамента приложения с заголовками файла каталога типоразмеров в семействе.'
+            })
+          ]
+        });
+
+        this._oPopover.addStyleClass('sapUiContentPadding');
+
+        this.getView().addDependent(this._oPopover);
+      }
+
+      this._oPopover.openBy(oEvent.getSource());
     }
 
   });
