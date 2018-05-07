@@ -1,0 +1,113 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core"
+	xmlns:u="sap.ui.unified"
+	xmlns:f="sap.ui.layout.form"
+	xmlns:l="sap.ui.layout">
+	<Dialog
+		id="sizeCatalogDialog"
+		title="Выгрузка каталога типоразмеров"
+		draggable="true"
+		contentWidth="40rem">
+		<content>
+			<VBox class="sapUiTinyMarginTop">
+				<HBox>
+					<HBox width="40%">
+						<u:FileUploader
+							id="fileUploader"
+							iconOnly="true"
+							placeholder="Файл не выбран"
+							icon="sap-icon://search"
+							fileType="txt"
+							name="myFileUpload"
+							uploadUrl="upload"
+							tooltip="Выбрать файл"
+							change="onChangeFile"
+							uploadComplete="handleUploadComplete"
+							class="sapUiTinyMarginEnd sapUiSmallMarginBegin"/>
+						<Button
+							tooltip="Загрузить каталог типоразмеров"
+							icon="sap-icon://upload"
+							press="handleUploadPress"/>
+					</HBox>
+					<HBox width="60%" justifyContent="End">
+						<Button 
+							icon="sap-icon://message-information" 
+							type="Emphasized"
+							press="handleMessagePopoverPress"
+							class="sapUiSmallMarginEnd"/>
+					</HBox>
+				</HBox>
+				<f:Form 
+					id="SizeCatalogMeta"
+					editable="true">
+					<f:layout>
+						<f:ResponsiveGridLayout
+							labelSpanXL="3"
+							labelSpanL="3"
+							labelSpanM="6"
+							labelSpanS="6"
+							adjustLabelSpan="false"
+							emptySpanXL="4"
+							emptySpanL="4"
+							emptySpanM="0"
+							emptySpanS="0"
+							columnsXL="1"
+							columnsL="1"
+							columnsM="1"
+							singleContainerFullSize="false" />
+					</f:layout>
+					<f:formContainers>
+						<f:FormContainer formElements="{mCatalogSize>/meta}">
+							<f:formElements>
+								<f:FormElement label="{
+									path: 'mCatalogSize>',
+									formatter: '.handleLabelFtr'
+								}">
+									<f:fields>
+										<Select 
+											forceSelection="false"
+											autoAdjustWidth="true"
+											selectedKey="0">
+											<items>
+												<core:Item text="Не назначено" key="0"/>
+												<core:Item text="Тип" key="1"/>
+												<core:Item text="Высота двутавра" key="2"/>
+												<core:Item text="Ширина полки" key="3"/>
+												<core:Item text="Толщина полки" key="4"/>
+												<core:Item text="Толщина стенки" key="5"/>
+												<core:Item text="Радиус сопряжения" key="6"/>
+												<core:Item text="Площадь сечения" key="7"/>
+												<core:Item text="Масса 1м длины" key="8"/>
+												<core:Item text="Момент инерции по оси X" key="9"/>												
+												<core:Item text="Момент сопротивления по оси Х" key="10"/>												
+												<core:Item text="Статический момент полусечения по оси Х" key="11"/>												
+												<core:Item text="Радиус инерции по оси Х" key="12"/>												
+												<core:Item text="Момент инерции по оси Y" key="13"/>												
+												<core:Item text="Момент сопротивления по оси Y" key="14"/>												
+												<core:Item text="Радиус инерции по оси Y" key="15"/>																								
+											</items>
+										</Select>
+									</f:fields>
+								</f:FormElement>
+							</f:formElements>
+						</f:FormContainer>
+					</f:formContainers>
+				</f:Form>
+			</VBox>
+			
+		</content>
+		<beginButton>
+			<Button
+				type="Emphasized"
+				text="Выгрузить"
+				press="onCloseSizeCatalogDialog"/>
+		</beginButton>
+		<endButton>
+			<Button
+				type="Reject"
+				text="Закрыть"
+				press="onCloseSizeCatalogDialog"/>
+		</endButton>	
+	</Dialog>
+</core:FragmentDefinition>
