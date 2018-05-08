@@ -583,10 +583,10 @@ sap.ui.define([
 					name: 'Уголоки равнополочные'
 				}
 			];
-      var oModel = new JSONModel(aSortamentsData);
-      this.setModel(oModel, 'sortaments');
+			var oModel = new JSONModel(aSortamentsData);
+			this.setModel(oModel, 'sortaments');
 
-      this.getRouter().initialize();
+			this.getRouter().initialize();
 		},
 
 		getContentDensityClass : function() {
@@ -598,6 +598,6 @@ sap.ui.define([
 			}
 		}
 		return this._sContentDensityClass;
-    }
+	}
 	});
 });

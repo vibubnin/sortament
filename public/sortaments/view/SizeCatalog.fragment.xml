@@ -20,7 +20,7 @@
 							icon="sap-icon://search"
 							fileType="txt"
 							name="myFileUpload"
-							uploadUrl="upload"
+							uploadUrl="api/uploadFile"
 							tooltip="Выбрать файл"
 							change="onChangeFile"
 							uploadComplete="handleUploadComplete"
