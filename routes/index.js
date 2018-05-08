@@ -3,6 +3,8 @@ const Iconv  = require('iconv').Iconv;
 const utf8Iconv = new Iconv('windows-1251', 'utf-8');
 const router = express.Router();
 
+const paramController = require('../controllers/paramController');
+
 router.route('/api/sortaments')
 	.get((req, res) => {})
 	.post((req, res) => {})
@@ -11,7 +13,7 @@ router.route('/api/sortaments')
 
 router.route('/api/params')
 	.get((req, res) => {})
-	.post((req, res) => {})
+	.post(paramController.createParam)
 	.put((req, res) => {})
 	.delete((req, res) => {});
 

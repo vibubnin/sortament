@@ -1,25 +1,31 @@
 const express = require("express");
-
-
+const bodyParser = require('body-parser');
 const fileUpload = require('express-fileupload');
 const port = 8000;
 const mongoose = require('mongoose');
-const routes = require('./routes');
+mongoose.Promise = global.Promise;
 
-let app = express();
+const startServer = () => {
+	const app = express();
+	const routes = require('./routes');
 
-app.use(fileUpload());
+	app.use( express.static(`${__dirname}/public`) );
+	app.use( fileUpload() );
+	app.use( bodyParser.json() );
+	app.use( bodyParser.urlencoded({ extended: true }) );
+	app.use('/', routes);
 
-app.use('/', routes);
- 
-app.use(express.static(`${__dirname}/public`));
+  app.listen(port, () => {
+		console.log(`Server started on port ${port}`)
+	}) // => use callback function
+};
 
-app.listen(port, () => { 
-	console.log(`The Server is running on port ${port}`);
-}); 
+const dbConnect = () => {
+	mongoose.connect('mongodb://localhost/sortament');
 
-// app.post('/upload', (req, res) => {
-// 	let data = utf8Iconv.convert(req.files.myFileUpload.data).toString();
-// 	//console.log(data);
-// 	res.send(data);
-// });
+	return mongoose.connection;
+};
+
+dbConnect()
+	.on('error', err => { console.log('Error connection \n', err); })
+	.once('open', startServer);

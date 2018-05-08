@@ -6,6 +6,6 @@ const sortamentSchema = new mongoose.Schema({
   photo:    { type: Buffer },
   params: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Param' }],
   data:   [{ type: mongoose.Schema.Types.ObjectId, ref: 'Data' }]
-});
+}, { versionKey: false });
 
 module.exports = mongoose.model('Sortament', sortamentSchema);
