@@ -6,7 +6,7 @@ const iPort = 8000;
 
 let app = express();
  
-app.use(express.static(__dirname + "/public"));
+app.use(express.static(`${__dirname}/public`));
 
 app.use(fileUpload());
 
@@ -17,5 +17,5 @@ app.post('/upload', (req, res) => {
 });
 
 app.listen(iPort, () => { 
-	console.log('The Server is running on port ' + iPort);
+	console.log(`The Server is running on port ${iPort}`);
 }); 
