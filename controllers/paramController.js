@@ -10,7 +10,7 @@ exports.createParam = (req, res) => {
     }
 
     res.json(newParam);
-    console.log(`Создан новый параметр: \n ${new_param}`);
+    console.log(`Создан новый параметр: \n ${newParam}`);
   });
 };
 

@@ -4,20 +4,30 @@ const utf8Iconv = new Iconv('windows-1251', 'utf-8');
 const router = express.Router();
 
 const paramController = require('../controllers/paramController');
+const sortamentController = require('../controllers/sortamentController');
 
-router.route('/api/sortaments')
-	.get((req, res) => {})
-	.post((req, res) => {})
-	.put((req, res) => {})
-	.delete((req, res) => {});
+const api = {
+  path: '/api/',
+  collection: {
+    sortaments: 'sortaments',
+    params: 'params',
+    data: 'data'
+  }
+};
 
-router.route('/api/params')
+router.route(api.path + api.collection.sortaments)
+	.get(sortamentController.getSortaments)
+	.post(sortamentController.createSortament)
+	.put(sortamentController.updateSortament)
+	.delete(sortamentController.deleteSortament);
+
+router.route(api.path + api.collection.params)
 	.get(paramController.getParams)
 	.post(paramController.createParam)
 	.put(paramController.updateParam)
 	.delete(paramController.deleteParam);
 
-router.route('/api/data')
+router.route(api.path + api.collection.data)
 	.get((req, res) => {})
 	.post((req, res) => {})
 	.put((req, res) => {})
