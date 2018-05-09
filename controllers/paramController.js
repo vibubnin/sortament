@@ -4,15 +4,12 @@ const Param = require('../models/Param');
 exports.createParam = (req, res) => {
   Param.create(req.body, (err, newParam) => {
     if (err) {
-      res.sendStatus(500);
+      res.status(500);
+      res.json({ message: { level: 'error', text: err.message } });
       console.log(err);
     }
 
-    res.json({ 
-      message: { level: 'success', text: 'Параметр успешно создан' }, 
-      result: category 
-    });
-    
+    res.json(newParam);
     console.log(`Создан новый параметр: \n ${new_param}`);
   });
 };
@@ -20,7 +17,8 @@ exports.createParam = (req, res) => {
 exports.getParams = (req, res) => {
   Param.find({}, (err, params) => {
     if (err) {
-      res.sendStatus(500);
+      res.status(500);
+      res.json({ message: { level: 'error', text: err.message } });
       console.log(err);
     }
 
@@ -28,14 +26,29 @@ exports.getParams = (req, res) => {
   });
 };
 
-// exports.updateParam = (req, res) => {
-//   Param.findByIdAndUpdate(req.body.id, (err, params) => {
-//     if (err) {
-//       res.sendStatus(500);
-//       console.log(err);
-//     }
+exports.updateParam = (req, res) => {
+  Param.findByIdAndUpdate(req.body.id, req.body.data, {new: true}, (err, updatedParam) => {
+    if (err) {
+      res.status(500);
+      res.json({ message: { level: 'error', text: err.message } });
+      console.log(err);
+    }
 
-//     res.json(params);
-//   });
-// };
+    res.json(updatedParam);
+    console.log(`Изменен параметр: \n ${updatedParam}`);
+  });
+};
+
+exports.deleteParam = (req, res) => {
+  Param.findByIdAndRemove(req.body.id, (err, deletedParam) => {
+    if (err) {
+      res.status(500);
+      res.json({ message: { level: 'error', text: err.message } });
+      console.log(err);
+    }
+
+    res.json(deletedParam);
+    console.log(`Удален параметр: \n ${deletedParam}`);   
+  });
+};
 

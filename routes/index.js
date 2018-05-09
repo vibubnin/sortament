@@ -14,8 +14,8 @@ router.route('/api/sortaments')
 router.route('/api/params')
 	.get(paramController.getParams)
 	.post(paramController.createParam)
-	.put((req, res) => {})
-	.delete((req, res) => {});
+	.put(paramController.updateParam)
+	.delete(paramController.deleteParam);
 
 router.route('/api/data')
 	.get((req, res) => {})
