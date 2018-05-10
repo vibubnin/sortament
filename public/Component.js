@@ -586,6 +586,14 @@ sap.ui.define([
 			var oModel = new JSONModel(aSortamentsData);
 			this.setModel(oModel, 'sortaments');
 
+			var gParamsModel = new JSONModel();
+			gParamsModel.loadData('/api/params');
+			gParamsModel.attachRequestCompleted(function() {
+			});
+
+			this.setModel(gParamsModel, 'gParams');
+
+
 			this.getRouter().initialize();
 		},
 

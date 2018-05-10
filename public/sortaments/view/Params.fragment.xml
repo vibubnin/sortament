@@ -1,0 +1,191 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core"
+	xmlns:u="sap.ui.unified"
+	xmlns:f="sap.ui.layout.form"
+	xmlns:l="sap.ui.layout">
+	<Dialog
+		id="paramsDialog"
+		draggable="true"
+		contentWidth="40rem"
+		contentHeight="40rem"
+    showHeader="true">
+    <customHeader>
+			<Bar>
+				<contentMiddle>
+					<Title
+						text="Редактор параметров"
+						titleStyle="H4"
+						level="H4"/>
+				</contentMiddle>
+        <contentLeft>
+          <Button
+            icon="sap-icon://nav-back"
+            type="Back"
+            tooltip="Назад"
+            press="onNavToParamsList"/>
+        </contentLeft>
+			</Bar>
+		</customHeader>
+		<content>
+			<NavContainer
+        id="paramsNavCon">
+        <Page
+          id="paramsListPage"
+          showHeader="false">
+          <content>
+            <List 
+              headerText="Параметры"
+              mode="Delete"
+              items="{
+                path: 'gParams>/'
+              }">
+              <headerToolbar>
+                <OverflowToolbar>
+                  <Title 
+                    text="Параметры"
+                    titleStyle="H5"
+						        level="H5"/>
+                  <ToolbarSpacer />
+                  <Button
+                    type="Transparent"
+                    icon="sap-icon://add"
+                    tooptip="Создать"
+                    press="onNavToCreateParam"/>
+                </OverflowToolbar>
+              </headerToolbar>
+              <items>
+                <CustomListItem 
+                  type="Detail"
+                  detailPress="onNavToEditParam">
+                  <VBox class="sapUiSmallMarginBegin sapUiTinyMarginTopBottom" >
+                    <Text text="{gParams>name}"/>
+                    <HBox>
+                      <Label
+                        visible="{= !!${gParams>var_name} }"
+                        text="{gParams>var_name}"/>
+                      <Label
+                        visible="{= !!${gParams>var_index} }" 
+                        text="{gParams>var_index}"/>
+                      <Label
+                        visible="{= !!${gParams>unit_numerator_name} }"
+                        text=", {gParams>unit_numerator_name}"/>
+                      <Label
+                        visible="{= !!${gParams>unit_numerator_degree} }"
+                        text="{gParams>unit_numerator_degree}"/>
+                      <Label
+                        visible="{gParams>unit_fraction}"
+                        text="{gParams>unit_fraction}"/>
+                      <Label
+                        visible="{= !!${gParams>unit_denominator_name} }"
+                        text="{gParams>unit_denominator_name}"/>
+                      <Label
+                        visible="{= !!${gParams>unit_denominator_degree} }"
+                        text="{gParams>unit_denominator_degree}"/>
+                    </HBox>
+                  </VBox>
+                </CustomListItem>
+              </items>
+            </List>
+          </content>
+        </Page>
+        <Page
+          id="paramFormPage"
+          showHeader="false">
+          <f:SimpleForm id="SimpleFormDisplay354"
+            editable="true"
+            layout="ResponsiveGridLayout"
+            title="Параметр"
+            labelSpanXL="3"
+            labelSpanL="3"
+            labelSpanM="4"
+            labelSpanS="12"
+            adjustLabelSpan="false"
+            emptySpanXL="4"
+            emptySpanL="4"
+            emptySpanM="1"
+            emptySpanS="0"
+            columnsXL="1"
+            columnsL="1"
+            columnsM="1"
+            singleContainerFullSize="false" >
+            <f:content>
+              <core:Title text="Общие"/>
+
+              <Label text="Название" required="true"/>
+              <Input
+                value="{mParam>/name}"
+                valueLiveUpdate="true"/>
+
+              <Label text="Переменная"/>
+              <Input
+                valueLiveUpdate="true"
+                value="{mParam>/var_name}"/>
+
+              <Label text="Индекс переменной"/>
+              <Input
+                valueLiveUpdate="true"
+                value="{mParam>/var_index}"/>
+
+              <core:Title text="Единицы измерения"/>
+
+              <Label text="Числитель"/>
+              <Input
+                valueLiveUpdate="true"
+                value="{mParam>/unit_numerator_name}" />
+
+              <Label text="Степень числителя"/>
+              <Input
+                valueLiveUpdate="true"
+                value="{mParam>/unit_numerator_degree}" />
+
+              <Label text="Дробь"/>
+              <CheckBox 
+                selected="{mParam>/unit_fraction}" 
+                select="onSetUnitFraction"/>
+
+              <Label 
+                visible="{mParam>/unit_fraction}" 
+                text="Знаменатель"/>
+              <Input
+                valueLiveUpdate="true"
+                visible="{mParam>/unit_fraction}" 
+                value="{mParam>/unit_denominator_name}"/>
+
+              <Label 
+                visible="{mParam>/unit_fraction}"
+                text="Степень знаменателя"/>
+              <Input
+                valueLiveUpdate="true"
+                visible="{mParam>/unit_fraction}"
+                value="{mParam>/unit_denominator_degree}"/>
+
+              <Label/>
+              <Button
+                type="Emphasized"
+                text="Сохранить"
+                width="6rem"
+                press="onUpdateParam"/>
+            </f:content>
+          </f:SimpleForm>
+          <!-- <footer>
+            <Toolbar>
+              <ToolbarSpacer/>
+              <Button
+                type="Reject"
+                text="Закрыть"
+                press="onCloseParamsDialog"/>
+            </Toolbar>
+          </footer> -->
+        </Page>
+      </NavContainer>
+		</content>
+		<beginButton>
+		</beginButton>
+		<endButton>
+			<Button
+				text="Закрыть"
+				press="onCloseParamsDialog"/>
+		</endButton>	
+	</Dialog>
+</core:FragmentDefinition>

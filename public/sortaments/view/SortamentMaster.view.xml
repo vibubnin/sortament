@@ -4,8 +4,17 @@
   xmlns="sap.m"
   xmlns:mvc="sap.ui.core.mvc"
   displayBlock="true">
-  <Page 
-  	title="Каталоги металлопроката">
+  <Page>
+		<customHeader>
+			<Bar>
+				<contentMiddle>
+					<Title
+						text="Каталоги металлопроката"
+						titleStyle="H4"
+						level="H4"/>
+				</contentMiddle>
+			</Bar>
+		</customHeader>
   	<subHeader>
 			<Toolbar>
 				<SearchField 
@@ -37,6 +46,16 @@
 		<footer>
 			<Toolbar>
 				<ToolbarSpacer/>
+				<Button
+					icon="sap-icon://list"
+					type="Transparent"
+					tooltip="Открыть редактор параметров"
+					press="onOpenParamsDialog"/>
+				<ToolbarSeparator/>
+				<Button
+					icon="sap-icon://create-form"
+					type="Transparent"
+					tooltip="Создать сортамент"/>
 			</Toolbar>
 		</footer>
   </Page>
