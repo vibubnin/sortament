@@ -5,6 +5,7 @@ const router = express.Router();
 
 const paramController = require('../controllers/paramController');
 const sortamentController = require('../controllers/sortamentController');
+const dataController = require('../controllers/dataController');
 
 const api = {
   path: '/api/',
@@ -28,10 +29,10 @@ router.route(api.path + api.collection.params)
 	.delete(paramController.deleteParam);
 
 router.route(api.path + api.collection.data)
-	.get((req, res) => {})
-	.post((req, res) => {})
-	.put((req, res) => {})
-	.delete((req, res) => {});
+	.get(dataController.createData)
+	.post(dataController.getData)
+	.put(dataController.updateData)
+	.delete(dataController.deleteData);
 
 router.route('/api/uploadFile')
 	.post((req, res) => {
