@@ -7,7 +7,7 @@
 	<Dialog
 		id="paramsDialog"
 		draggable="true"
-		contentWidth="40rem"
+		contentWidth="34rem"
 		contentHeight="40rem"
     showHeader="true">
     <customHeader>
@@ -20,6 +20,7 @@
 				</contentMiddle>
         <contentLeft>
           <Button
+            visible="{mParamSettings>/visibleNavBackBtn}"
             icon="sap-icon://nav-back"
             type="Back"
             tooltip="Назад"
@@ -34,12 +35,14 @@
           id="paramsListPage"
           showHeader="false">
           <content>
-            <List 
+            <List
+              id="paramList"
               headerText="Параметры"
               mode="Delete"
               items="{
                 path: 'gParams>/'
-              }">
+              }"
+              delete="onDeleteParam">
               <headerToolbar>
                 <OverflowToolbar>
                   <Title 
@@ -47,6 +50,11 @@
                     titleStyle="H5"
 						        level="H5"/>
                   <ToolbarSpacer />
+                  <SearchField
+                    id="paramsSearchField"
+                    liveChange="onSearchParam"
+                    width="12rem" />
+                  <ToolbarSeparator/>
                   <Button
                     type="Transparent"
                     icon="sap-icon://add"
@@ -65,21 +73,24 @@
                         visible="{= !!${gParams>var_name} }"
                         text="{gParams>var_name}"/>
                       <Label
+                        class="subscript"
                         visible="{= !!${gParams>var_index} }" 
                         text="{gParams>var_index}"/>
                       <Label
                         visible="{= !!${gParams>unit_numerator_name} }"
                         text=", {gParams>unit_numerator_name}"/>
                       <Label
+                        class="superscript"
                         visible="{= !!${gParams>unit_numerator_degree} }"
                         text="{gParams>unit_numerator_degree}"/>
                       <Label
                         visible="{gParams>unit_fraction}"
-                        text="{gParams>unit_fraction}"/>
+                        text="{= ${gParams>unit_fraction} ? '/' : '' }"/>
                       <Label
                         visible="{= !!${gParams>unit_denominator_name} }"
                         text="{gParams>unit_denominator_name}"/>
                       <Label
+                        class="superscript"
                         visible="{= !!${gParams>unit_denominator_degree} }"
                         text="{gParams>unit_denominator_degree}"/>
                     </HBox>
@@ -95,7 +106,7 @@
           <f:SimpleForm id="SimpleFormDisplay354"
             editable="true"
             layout="ResponsiveGridLayout"
-            title="Параметр"
+            title="{= ${mParamSettings>/editMode} ? 'Редактирование' : 'Создание' } параметра"
             labelSpanXL="3"
             labelSpanL="3"
             labelSpanM="4"
@@ -162,21 +173,19 @@
 
               <Label/>
               <Button
+                visible="{= ${mParamSettings>/editMode} }"
                 type="Emphasized"
                 text="Сохранить"
                 width="6rem"
                 press="onUpdateParam"/>
+              <Button
+                visible="{= !${mParamSettings>/editMode} }"
+                type="Emphasized"
+                text="Сохранить"
+                width="6rem"
+                press="onCreateParam"/>
             </f:content>
           </f:SimpleForm>
-          <!-- <footer>
-            <Toolbar>
-              <ToolbarSpacer/>
-              <Button
-                type="Reject"
-                text="Закрыть"
-                press="onCloseParamsDialog"/>
-            </Toolbar>
-          </footer> -->
         </Page>
       </NavContainer>
 		</content>

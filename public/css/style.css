@@ -8,10 +8,30 @@
 	font-size: xx-small;
 }
 
+
+
+/* 
+Актуальные стили
+*/
+
+/* ПЕРЕНОС ТЕКСТА ЭЛЕМЕНТОВ СПИСКА В МАСТЕРЕ */
+.sortamentItem .sapMSLITitleOnly {
+	white-space: normal;
+}
+
+/* БОКОВЫЕ РАМКИ ТАБЛИЦЫ СОРТАМЕНТА */
 .sortamentTable .sapMListTblCell {
     border-right: 1px solid #e5e5e5;
 }
 
-.sortamentItem .sapMSLITitleOnly {
-	white-space: normal;
+/* ВЕРХНИЕ ИНДЕКСЫ */
+.superscript {
+	vertical-align: super;
+	font-size: xx-small;
+}
+
+/* НИЖНИЕ ИНДЕКСЫ */
+.subscript {
+	vertical-align: sub;
+	font-size: xx-small;
 }
