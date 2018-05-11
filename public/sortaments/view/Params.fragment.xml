@@ -7,6 +7,7 @@
 	<Dialog
 		id="paramsDialog"
 		draggable="true"
+    resizable="true"
 		contentWidth="34rem"
 		contentHeight="40rem"
     showHeader="true">

@@ -2,8 +2,9 @@ sap.ui.define([
   "sap/ui/core/mvc/Controller",
   'sap/ui/model/json/JSONModel',
   'sap/m/MessageToast',
+  'sap/m/MessageBox',
   'sap/ui/model/Filter'
-], function (Controller, JSONModel, MessageToast, Filter) {
+], function (Controller, JSONModel, MessageToast, MessageBox, Filter) {
   "use strict";
   return Controller.extend("sortament.sortaments.controller.SortamentMaster", {
     onInit: function () {
@@ -157,21 +158,37 @@ sap.ui.define([
         .getParameter('listItem')
         .getBindingContext('gParams')
         .getObject();
+
       var oSendData = { id: oRemoveParam._id };
 
-        $.ajax({
-          type: 'DELETE',
-          url: '/api/params',
-          contentType: 'application/json',
-          data: JSON.stringify(oSendData),
-          success: function(data, textStatus, jqXHR) {
-            MessageToast.show('Параметр успешно удален');
-            this.getView().getModel('gParams').loadData('/api/params');          
-          }.bind(this),
-          error: function(jqXHR, textStatus, errorThrown) {
-            MessageToast.show('Произошла ошибка при удалении параметра');
-          }.bind(this),
-        });
+      MessageBox.warning(
+				"Вы уверены, что хотите удалить параметр?",
+				{
+					actions: [sap.m.MessageBox.Action.OK, sap.m.MessageBox.Action.CANCEL],
+					styleClass: "sapUiSizeCompact",
+					onClose: function(sAction) {
+            if (sAction === 'OK') {
+              this._deleteParam(oSendData);
+            } 
+					}.bind(this)
+				}
+			);
+    },
+
+    _deleteParam: function(oSendData) {
+      $.ajax({
+        type: 'DELETE',
+        url: '/api/params',
+        contentType: 'application/json',
+        data: JSON.stringify(oSendData),
+        success: function(data, textStatus, jqXHR) {
+          MessageToast.show('Параметр успешно удален');
+          this.getView().getModel('gParams').loadData('/api/params');          
+        }.bind(this),
+        error: function(jqXHR, textStatus, errorThrown) {
+          MessageToast.show('Произошла ошибка при удалении параметра');
+        }.bind(this),
+      });
     }
 
   });
