@@ -78,6 +78,11 @@
           "pattern": "detail/{sortPath}",
           "name": "selectedSortament",
           "target": ["sortamentMaster", "sortamentDetail"]
+				},
+				{
+          "pattern": "newSortament",
+          "name": "newSortament",
+          "target": "newSortament"
         }
 			],
 			"targets": {
@@ -91,6 +96,12 @@
           "viewPath": "sortament.sortaments.view",
           "viewName": "SortamentDetail",
           "viewId": "sortamentDetail",
+          "controlAggregation": "detailPages"
+				},
+				"newSortament": {
+          "viewPath": "sortament.sortaments.view",
+          "viewName": "NewSortament",
+          "viewId": "newSortament",
           "controlAggregation": "detailPages"
         },
         "empty": {

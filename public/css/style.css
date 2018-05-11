@@ -35,3 +35,10 @@
 	vertical-align: sub;
 	font-size: xx-small;
 }
+
+/* Метки на одном уровне внутри флексов */
+
+.alignLabel {
+	line-height: 2;
+  height: 1.4rem;
+}

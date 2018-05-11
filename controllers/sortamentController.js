@@ -2,16 +2,19 @@ const mongoose = require('mongoose');
 const Sortament = require('../models/Sortament');
 
 exports.createSortament = (req, res) => {
-  Sortament.create(req.body, (err, newSortament) => {
-    if (err) {
-      res.status(500);
-      res.json({ message: { level: 'error', text: err.message } });
-      console.log(err);
-    }
+  console.log(Sortament, mongoose.Types.ObjectId);
+  var x = 5;
 
-    res.json(newSortament);
-    console.log(`Создан новый сортамент: \n ${newSortament}`);
-  });
+  // Sortament.create(req.body, (err, newSortament) => {
+  //   if (err) {
+  //     res.status(500);
+  //     res.json({ message: { level: 'error', text: err.message } });
+  //     console.log(err);
+  //   }
+
+  //   res.json(newSortament);
+  //   console.log(`Создан новый сортамент: \n ${newSortament}`);
+  // });
 };
 
 exports.getSortaments = (req, res) => {

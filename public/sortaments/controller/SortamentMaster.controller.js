@@ -86,6 +86,11 @@ sap.ui.define([
 			});
     },
 
+    onNavToNewSortament: function() {
+      var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+      oRouter.navTo("newSortament");
+    },
+
     onOpenParamsDialog: function() {
       var oView = this.getView();
       var oDialog = oView.byId("paramsDialog");

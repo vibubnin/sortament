@@ -1,0 +1,138 @@
+<mvc:View 
+  controllerName="sortament.sortaments.controller.NewSortament"
+  xmlns:l="sap.ui.layout"
+  xmlns:f="sap.ui.layout.form"
+  xmlns:u="sap.ui.unified"
+  xmlns="sap.m"
+  xmlns:mvc="sap.ui.core.mvc"
+  displayBlock="true">
+  <Page
+    id="newSortamentPage"
+    showNavButton="true"
+		navButtonPress="onNavBack">
+		<customHeader>
+			<Bar>
+				<contentMiddle>
+					<Title
+						text="Создание сортамента"
+						titleStyle="H4"
+						level="H4"/>
+				</contentMiddle>
+			</Bar>
+		</customHeader>
+		<content>
+			<Wizard 
+        id="createSortamentWizard"
+        complete="wizardCompletedHandler">
+        <WizardStep
+          id="commonParamsStep"
+          title="Общие параметры"
+          validated="true">
+          <f:SimpleForm
+            editable="true">
+            <Label text="Название"/>
+            <Input value="{/productPrice}"/>
+
+            <Label text="Стандарт"/>
+            <Input value="{/productPrice}"/>
+
+            <Label text="Изображение сечения"/>
+            <u:FileUploader
+              width="100%"
+              tooltip="Загрузите изображения сечения"
+              style="Emphasized"
+              placeholder="Выберите файл для загрузки на сервер ..."/>
+          </f:SimpleForm>
+        </WizardStep>
+        <WizardStep 
+          id="tableMetadataStep"
+          title="Заголовки таблицы сортамента"
+          validated="true">
+          <VBox alignItems="Center" width="100%">
+            <!-- <f:Form 
+              id="TableMetadataForm"
+              editable="true">
+              <f:layout>
+                <f:ResponsiveGridLayout
+                  labelSpanXL="3"
+                  labelSpanL="3"
+                  labelSpanM="3"
+                  labelSpanS="12"
+                  adjustLabelSpan="false"
+                  emptySpanXL="4"
+                  emptySpanL="3"
+                  emptySpanM="4"
+                  emptySpanS="0"
+                  columnsXL="1"
+                  columnsL="2"
+                  columnsM="1"
+                  singleContainerFullSize="false" />
+              </f:layout>
+              <f:formContainers>
+                <f:FormContainer formElements="{mHeaders>/}">
+                  <f:formElements>
+                    <f:FormElement label="{mHeaders>label}">
+                      <f:fields>
+                        <Select>
+                          <layoutData>
+                            <l:GridData span="XL2 L6 M2 S4" />
+                          </layoutData>
+                        </Select>
+                        <Button icon="sap-icon://sys-cancel">
+                          <layoutData>
+                            <l:GridData span="XL2 L1 M2 S4" />
+                          </layoutData>
+                        </Button>
+                      </f:fields>
+                    </f:FormElement>
+                  </f:formElements>
+                </f:FormContainer>
+              </f:formContainers>
+            </f:Form> -->
+            <VBox width="100%" alignItems="Center" items="{mHeaders>/}">
+              <HBox width="100%" justifyContent="Center">
+                <HBox 
+                  justifyContent="End" 
+                  alignItems="Center" 
+                  width="26%">
+                  <Label class="alignLabel sapUiSmallMarginEnd" text="{mHeaders>label}:"/>
+                </HBox>
+                <HBox width="50%">
+                  <Select
+                    width="16rem"
+                    class="sapUiSmallMarginEnd"/>
+                  <Button icon="sap-icon://sys-cancel" type="Reject"/>
+                </HBox>
+              </HBox>
+            </VBox>
+            <HBox class="sapUiSmallMarginTop">
+              <Button icon="sap-icon://add" class="sapUiSmallMarginEnd"/>
+              <Button icon="sap-icon://show"/>
+            </HBox>
+          </VBox>
+        </WizardStep>
+        <WizardStep id="dataTableStep"
+              validated="true"
+              activate="optionalStepActivation"
+              title="Табличные данные">
+        </WizardStep>
+      </Wizard>
+		</content>
+		<footer>
+			<Toolbar>
+				<ToolbarSpacer/>
+				<!-- <Button
+					icon="sap-icon://list"
+					type="Transparent"
+					tooltip="Открыть редактор параметров"
+					press="onOpenParamsDialog"/>
+				<ToolbarSeparator/> -->
+				<!-- <Button
+					icon="sap-icon://create-form"
+					type="Transparent"
+					tooltip="Отмена"
+          press="nav"/> -->
+			</Toolbar>
+		</footer>
+  </Page>
+</mvc:View>

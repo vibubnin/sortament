@@ -55,7 +55,8 @@
 				<Button
 					icon="sap-icon://create-form"
 					type="Transparent"
-					tooltip="Создать сортамент"/>
+					tooltip="Создать сортамент"
+					press="onNavToNewSortament"/>
 			</Toolbar>
 		</footer>
   </Page>
