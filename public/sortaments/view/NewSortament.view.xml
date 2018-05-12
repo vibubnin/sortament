@@ -3,6 +3,7 @@
   xmlns:l="sap.ui.layout"
   xmlns:f="sap.ui.layout.form"
   xmlns:u="sap.ui.unified"
+  xmlns:core="sap.ui.core"
   xmlns="sap.m"
   xmlns:mvc="sap.ui.core.mvc"
   displayBlock="true">
@@ -23,7 +24,8 @@
 		<content>
 			<Wizard 
         id="createSortamentWizard"
-        complete="wizardCompletedHandler">
+        complete="wizardCompletedHandler"
+        finishButtonText="Сохранить">
         <WizardStep
           id="commonParamsStep"
           title="Общие параметры"
@@ -31,10 +33,10 @@
           <f:SimpleForm
             editable="true">
             <Label text="Название"/>
-            <Input value="{/productPrice}"/>
+            <Input value="{/productPrice}" valueLiveUpdate="true"/>
 
             <Label text="Стандарт"/>
-            <Input value="{/productPrice}"/>
+            <Input value="{/productPrice}" valueLiveUpdate="true"/>
 
             <Label text="Изображение сечения"/>
             <u:FileUploader
@@ -49,72 +51,148 @@
           title="Заголовки таблицы сортамента"
           validated="true">
           <VBox alignItems="Center" width="100%">
-            <!-- <f:Form 
-              id="TableMetadataForm"
-              editable="true">
-              <f:layout>
-                <f:ResponsiveGridLayout
-                  labelSpanXL="3"
-                  labelSpanL="3"
-                  labelSpanM="3"
-                  labelSpanS="12"
-                  adjustLabelSpan="false"
-                  emptySpanXL="4"
-                  emptySpanL="3"
-                  emptySpanM="4"
-                  emptySpanS="0"
-                  columnsXL="1"
-                  columnsL="2"
-                  columnsM="1"
-                  singleContainerFullSize="false" />
-              </f:layout>
-              <f:formContainers>
-                <f:FormContainer formElements="{mHeaders>/}">
-                  <f:formElements>
-                    <f:FormElement label="{mHeaders>label}">
-                      <f:fields>
-                        <Select>
-                          <layoutData>
-                            <l:GridData span="XL2 L6 M2 S4" />
-                          </layoutData>
-                        </Select>
-                        <Button icon="sap-icon://sys-cancel">
-                          <layoutData>
-                            <l:GridData span="XL2 L1 M2 S4" />
-                          </layoutData>
-                        </Button>
-                      </f:fields>
-                    </f:FormElement>
-                  </f:formElements>
-                </f:FormContainer>
-              </f:formContainers>
-            </f:Form> -->
-            <VBox width="100%" alignItems="Center" items="{mHeaders>/}">
+            <VBox width="100%" alignItems="Center" items="{mHeaders>/data}">
               <HBox width="100%" justifyContent="Center">
                 <HBox 
                   justifyContent="End" 
                   alignItems="Center" 
                   width="26%">
-                  <Label class="alignLabel sapUiSmallMarginEnd" text="{mHeaders>label}:"/>
+                  <Label class="alignLabel sapUiSmallMarginEnd" text="Заголовок {mHeaders>position}:"/>
                 </HBox>
                 <HBox width="50%">
                   <Select
-                    width="16rem"
-                    class="sapUiSmallMarginEnd"/>
-                  <Button icon="sap-icon://sys-cancel" type="Reject"/>
+                    width="20rem"
+                    class="sapUiSmallMarginEnd"
+                    items="{
+                      path: 'gParams>/',
+                      templateShareable: false
+                    }"
+                    selectedKey="{mHeaders>paramId}">
+                    <items>
+                      <core:Item
+                        text="{gParams>name}"
+                        key="{gParams>_id}"/>
+                    </items>
+                  </Select>
+                  <Button 
+                    icon="sap-icon://sys-cancel" 
+                    type="Reject" 
+                    visible="{mHeaders>remove}"
+                    press="onRemoveHeader"/>
                 </HBox>
               </HBox>
             </VBox>
             <HBox class="sapUiSmallMarginTop">
-              <Button icon="sap-icon://add" class="sapUiSmallMarginEnd"/>
-              <Button icon="sap-icon://show"/>
+              <Button icon="sap-icon://add" class="sapUiSmallMarginEnd" press="onAddHeader"/>
+              <Button icon="sap-icon://show" press="onShowTable"/>
             </HBox>
+            <Table
+              id="headersTable"
+              class="sortamentTable sapUiSmallMarginTop sapUiSmallMarginBottom"
+              showNoData="false"
+              columns="{mSortamentTable>/columns}">
+              <columns>
+                <Column>
+                  <VBox>
+                    <HBox>
+                      <Text text="{= ${mSortamentTable>var_name} ? ${mSortamentTable>var_name} : ${mSortamentTable>name} }"/>
+
+                      <Text 
+                        class="subscript" 
+                        text="{mSortamentTable>var_index}"
+                        visible="{= !!${mSortamentTable>var_index} }"/>
+
+                      <Text 
+                        visible="{= !!${mSortamentTable>unit_numerator_name} }" 
+                        text=","/>
+
+                    </HBox>
+
+                    <HBox visible="{= !!${mSortamentTable>unit_numerator_name} }">
+                      <Text text="{mSortamentTable>unit_numerator_name}"/>
+
+                      <Text 
+                        class="superscript"
+                        visible="{= !!${mSortamentTable>unit_numerator_degree} }"
+                        text="{mSortamentTable>unit_numerator_degree}"/>
+
+                      <Text 
+                        text="/" 
+                        visible="{mSortamentTable>unit_fraction}"/>
+
+                      <Text
+                        visible="{= !!${mSortamentTable>unit_denominator_name} }"
+                        text="{mSortamentTable>unit_denominator_name}"/>
+
+                      <Text 
+                        class="superscript"
+                        visible="{= !!${mSortamentTable>unit_denominator_degree} }"
+                        text="{mSortamentTable>unit_denominator_degree}"/>
+                    </HBox>
+                  </VBox>
+                </Column>
+              </columns>
+            </Table>
           </VBox>
         </WizardStep>
-        <WizardStep id="dataTableStep"
-              validated="true"
-              activate="optionalStepActivation"
-              title="Табличные данные">
+        <WizardStep 
+          id="dataTableStep"
+          validated="true"
+          activate="optionalStepActivation"
+          title="Табличные данные">
+          <Table
+            id="dataTable"
+            mode="Delete"
+            delete="onDeleteTableRow"
+            class="sortamentTable sapUiSmallMarginTop sapUiSmallMarginBottom"
+            showNoData="true"
+            columns="{mSortamentTable>/columns}"
+            items="{
+              path: 'mSortamentTable>/rows',
+              factory: '.rowFactory'}">
+            <headerToolbar>
+              <Toolbar>
+                <content>
+                  <Title text="Сортамент" level="H5"/>
+                  <ToolbarSpacer />
+                  <Button icon="sap-icon://add" press="onAddRow"/>
+                </content>
+              </Toolbar>
+            </headerToolbar>
+            <columns>
+              <Column>
+                <VBox>
+                  <HBox>
+                    <Text text="{= ${mSortamentTable>var_name} ? ${mSortamentTable>var_name} : ${mSortamentTable>name} }"/>
+                    <Text 
+                      class="subscript" 
+                      text="{mSortamentTable>var_index}"
+                      visible="{= !!${mSortamentTable>var_index} }"/>
+                    <Text 
+                      visible="{= !!${mSortamentTable>unit_numerator_name} }" 
+                      text=","/>
+                  </HBox>
+                  <HBox visible="{= !!${mSortamentTable>unit_numerator_name} }">
+                    <Text text="{mSortamentTable>unit_numerator_name}"/>
+                    <Text 
+                      class="superscript"
+                      visible="{= !!${mSortamentTable>unit_numerator_degree} }"
+                      text="{mSortamentTable>unit_numerator_degree}"/>
+                    <Text 
+                      text="/" 
+                      visible="{mSortamentTable>unit_fraction}"/>
+                    <Text
+                      visible="{= !!${mSortamentTable>unit_denominator_name} }"
+                      text="{mSortamentTable>unit_denominator_name}"/>
+                    <Text 
+                      class="superscript"
+                      visible="{= !!${mSortamentTable>unit_denominator_degree} }"
+                      text="{mSortamentTable>unit_denominator_degree}"/>
+                  </HBox>
+                </VBox>
+              </Column>
+            </columns>
+          </Table>
         </WizardStep>
       </Wizard>
 		</content>
