@@ -12,17 +12,23 @@ sap.ui.define([
         count: 1,
         data: [{ position: 1, remove: false, paramId: "" }]
       });
-      this.mSortamentTableModel = new JSONModel({
-        columns: [],
-        rows: []
+      this.mNewSortamentModel = new JSONModel({
+        name: '', standart: '', photo: '', columns: [], rows: []
       });
       this.getView()
         .setModel(this.mHeadersModel, 'mHeaders')
-        .setModel(this.mSortamentTableModel, 'mSortamentTable');
+        .setModel(this.mNewSortamentModel, 'mNewSortament');
     },
 
     _onNewSortamentMatched: function (oEvent) {
       this.byId('headersTable').setVisible(false);
+      this.mHeadersModel.setData({
+        count: 1,
+        data: [{ position: 1, remove: false, paramId: "" }]
+      });
+      this.mNewSortamentModel.setData({
+        name: '', standart: '', photo: '', columns: [], rows: []
+      });
     },
 
     onNavBack: function () {
@@ -78,31 +84,31 @@ sap.ui.define([
         );
       });
 
-      this.mSortamentTableModel.setProperty('/columns', aColumns);
+      this.mNewSortamentModel.setProperty('/columns', aColumns);
       this.byId('headersTable').setVisible(true);      
     },
 
     onAddRow: function() {
-      var aColumns = this.mSortamentTableModel.getData().columns;
-      var aRows = this.mSortamentTableModel.getData().rows;
+      var aColumns = this.mNewSortamentModel.getData().columns;
+      var aRows = this.mNewSortamentModel.getData().rows;
       var oRow = {};
       aColumns.forEach(function(oColumn) {
         oRow[oColumn._id] = null;
       });
       aRows.push(oRow);
-      this.mSortamentTableModel.setProperty('/rows', aRows);
+      this.mNewSortamentModel.setProperty('/rows', aRows);
     },
 
     rowFactory: function(sId, oContext) {
       var oRow = oContext.getObject();
-      var aColumns = this.mSortamentTableModel.getData().columns;
+      var aColumns = this.mNewSortamentModel.getData().columns;
       
       var aCells = [];
 
       aColumns.forEach(function(oColumn) {
         aCells.push(
           new sap.m.Input({ 
-            value: '{mSortamentTable>' + oColumn._id + '}',
+            value: '{mNewSortament>' + oColumn._id + '}',
             valueLiveUpdate: true
           })
         );
@@ -114,9 +120,9 @@ sap.ui.define([
     },
 
     onDeleteTableRow: function(oEvent) {
-      var oContext = oEvent.getParameter('listItem').getBindingContext('mSortamentTable');
+      var oContext = oEvent.getParameter('listItem').getBindingContext('mNewSortament');
       var iIndex = +oContext.sPath.slice(6);
-      var aRows = this.mSortamentTableModel.getData().rows;
+      var aRows = this.mNewSortamentModel.getData().rows;
 
       var aNewRows = aRows.filter(function(item, i, arr) {
         if (i !== iIndex) {
@@ -124,7 +130,42 @@ sap.ui.define([
         }
       }, this);
 
-      this.mSortamentTableModel.setProperty('/rows', aNewRows);
+      this.mNewSortamentModel.setProperty('/rows', aNewRows);
+    },
+
+    onUploadChange: function(oEvent) {
+      var FR = new FileReader();
+      var aFiles = oEvent.getParameter('files');
+      if (aFiles.length) {
+        FR.addEventListener('load', function(e) {
+          this.mNewSortamentModel.setProperty('/photo', e.target.result);
+        }.bind(this));
+        FR.readAsDataURL(oEvent.getParameter('files')[0]);
+      }
+    },
+
+    onRemoveImage: function() {
+      this.mNewSortamentModel.setProperty('/photo', '');
+      this.getView().byId('sectionFU').setValue('');
+    },
+
+    onSaveSortament: function() {
+      var oSendData = this.mNewSortamentModel.getData();
+
+      $.ajax({
+        type: 'POST',
+        url: '/api/sortaments',
+        contentType: 'application/json',
+        data: JSON.stringify(oSendData),
+        success: function(data, textStatus, jqXHR) {
+          MessageToast.show('Сортамент успешно создан');
+          // this.getView().getModel('').loadData('/api/params');          
+        }.bind(this),
+        error: function(jqXHR, textStatus, errorThrown) {
+          MessageToast.show('Произошла ошибка при создании сортамента');
+        }.bind(this),
+      });
+
     }
 
   });

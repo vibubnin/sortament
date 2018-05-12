@@ -24,7 +24,7 @@
 		<content>
 			<Wizard 
         id="createSortamentWizard"
-        complete="wizardCompletedHandler"
+        complete="onSaveSortament"
         finishButtonText="Сохранить">
         <WizardStep
           id="commonParamsStep"
@@ -33,17 +33,39 @@
           <f:SimpleForm
             editable="true">
             <Label text="Название"/>
-            <Input value="{/productPrice}" valueLiveUpdate="true"/>
+            <Input width="36rem" value="{mNewSortament>/name}" valueLiveUpdate="true"/>
 
             <Label text="Стандарт"/>
-            <Input value="{/productPrice}" valueLiveUpdate="true"/>
+            <Input width="36rem" value="{mNewSortament>/standart}" valueLiveUpdate="true"/>
 
             <Label text="Изображение сечения"/>
             <u:FileUploader
+              id="sectionFU"
               width="100%"
               tooltip="Загрузите изображения сечения"
               style="Emphasized"
-              placeholder="Выберите файл для загрузки на сервер ..."/>
+              placeholder="Выберите файл для загрузки на сервер ..."
+              change="onUploadChange"/>
+            <Button
+              width="6rem"
+              type="Reject"
+              press="onRemoveImage"
+              visible="{= ${mNewSortament>/photo} ==='' ? false : true }"
+              text="Удалить"
+              icon="sap-icon://delete"/>
+
+            <Label/>
+              <!-- <FlexBox
+                height="200px"
+                alignItems="Start"
+                justifyContent="Center"
+                visible="{= ${mPerson>/Photo} === '' ? false : true}"> -->
+                <Image 
+                  src="{mNewSortament>/photo}" 
+                  height="250px" 
+                  width="250px"
+                  visible="{= !!${mNewSortament>/photo} }"/>
+              <!-- </FlexBox> -->
           </f:SimpleForm>
         </WizardStep>
         <WizardStep 
@@ -90,44 +112,44 @@
               id="headersTable"
               class="sortamentTable sapUiSmallMarginTop sapUiSmallMarginBottom"
               showNoData="false"
-              columns="{mSortamentTable>/columns}">
+              columns="{mNewSortament>/columns}">
               <columns>
                 <Column>
                   <VBox>
                     <HBox>
-                      <Text text="{= ${mSortamentTable>var_name} ? ${mSortamentTable>var_name} : ${mSortamentTable>name} }"/>
+                      <Text text="{= ${mNewSortament>var_name} ? ${mNewSortament>var_name} : ${mNewSortament>name} }"/>
 
                       <Text 
                         class="subscript" 
-                        text="{mSortamentTable>var_index}"
-                        visible="{= !!${mSortamentTable>var_index} }"/>
+                        text="{mNewSortament>var_index}"
+                        visible="{= !!${mNewSortament>var_index} }"/>
 
                       <Text 
-                        visible="{= !!${mSortamentTable>unit_numerator_name} }" 
+                        visible="{= !!${mNewSortament>unit_numerator_name} }" 
                         text=","/>
 
                     </HBox>
 
-                    <HBox visible="{= !!${mSortamentTable>unit_numerator_name} }">
-                      <Text text="{mSortamentTable>unit_numerator_name}"/>
+                    <HBox visible="{= !!${mNewSortament>unit_numerator_name} }">
+                      <Text text="{mNewSortament>unit_numerator_name}"/>
 
                       <Text 
                         class="superscript"
-                        visible="{= !!${mSortamentTable>unit_numerator_degree} }"
-                        text="{mSortamentTable>unit_numerator_degree}"/>
+                        visible="{= !!${mNewSortament>unit_numerator_degree} }"
+                        text="{mNewSortament>unit_numerator_degree}"/>
 
                       <Text 
                         text="/" 
-                        visible="{mSortamentTable>unit_fraction}"/>
+                        visible="{mNewSortament>unit_fraction}"/>
 
                       <Text
-                        visible="{= !!${mSortamentTable>unit_denominator_name} }"
-                        text="{mSortamentTable>unit_denominator_name}"/>
+                        visible="{= !!${mNewSortament>unit_denominator_name} }"
+                        text="{mNewSortament>unit_denominator_name}"/>
 
                       <Text 
                         class="superscript"
-                        visible="{= !!${mSortamentTable>unit_denominator_degree} }"
-                        text="{mSortamentTable>unit_denominator_degree}"/>
+                        visible="{= !!${mNewSortament>unit_denominator_degree} }"
+                        text="{mNewSortament>unit_denominator_degree}"/>
                     </HBox>
                   </VBox>
                 </Column>
@@ -146,9 +168,9 @@
             delete="onDeleteTableRow"
             class="sortamentTable sapUiSmallMarginTop sapUiSmallMarginBottom"
             showNoData="true"
-            columns="{mSortamentTable>/columns}"
+            columns="{mNewSortament>/columns}"
             items="{
-              path: 'mSortamentTable>/rows',
+              path: 'mNewSortament>/rows',
               factory: '.rowFactory'}">
             <headerToolbar>
               <Toolbar>
@@ -163,31 +185,31 @@
               <Column>
                 <VBox>
                   <HBox>
-                    <Text text="{= ${mSortamentTable>var_name} ? ${mSortamentTable>var_name} : ${mSortamentTable>name} }"/>
+                    <Text text="{= ${mNewSortament>var_name} ? ${mNewSortament>var_name} : ${mNewSortament>name} }"/>
                     <Text 
                       class="subscript" 
-                      text="{mSortamentTable>var_index}"
-                      visible="{= !!${mSortamentTable>var_index} }"/>
+                      text="{mNewSortament>var_index}"
+                      visible="{= !!${mNewSortament>var_index} }"/>
                     <Text 
-                      visible="{= !!${mSortamentTable>unit_numerator_name} }" 
+                      visible="{= !!${mNewSortament>unit_numerator_name} }" 
                       text=","/>
                   </HBox>
-                  <HBox visible="{= !!${mSortamentTable>unit_numerator_name} }">
-                    <Text text="{mSortamentTable>unit_numerator_name}"/>
+                  <HBox visible="{= !!${mNewSortament>unit_numerator_name} }">
+                    <Text text="{mNewSortament>unit_numerator_name}"/>
                     <Text 
                       class="superscript"
-                      visible="{= !!${mSortamentTable>unit_numerator_degree} }"
-                      text="{mSortamentTable>unit_numerator_degree}"/>
+                      visible="{= !!${mNewSortament>unit_numerator_degree} }"
+                      text="{mNewSortament>unit_numerator_degree}"/>
                     <Text 
                       text="/" 
-                      visible="{mSortamentTable>unit_fraction}"/>
+                      visible="{mNewSortament>unit_fraction}"/>
                     <Text
-                      visible="{= !!${mSortamentTable>unit_denominator_name} }"
-                      text="{mSortamentTable>unit_denominator_name}"/>
+                      visible="{= !!${mNewSortament>unit_denominator_name} }"
+                      text="{mNewSortament>unit_denominator_name}"/>
                     <Text 
                       class="superscript"
-                      visible="{= !!${mSortamentTable>unit_denominator_degree} }"
-                      text="{mSortamentTable>unit_denominator_degree}"/>
+                      visible="{= !!${mNewSortament>unit_denominator_degree} }"
+                      text="{mNewSortament>unit_denominator_degree}"/>
                   </HBox>
                 </VBox>
               </Column>
