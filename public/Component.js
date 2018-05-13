@@ -17,7 +17,8 @@ sap.ui.define([
 		init: function() {
 			// call the base component's init function
 			UIComponent.prototype.init.apply(this, arguments);
-
+			
+			/*
 			var aSortamentsData = [
 				{
 					id: 1,
@@ -582,16 +583,19 @@ sap.ui.define([
 					category: 'ГОСТ 8509-93',
 					name: 'Уголоки равнополочные'
 				}
-			];
-			var oModel = new JSONModel(aSortamentsData);
-			this.setModel(oModel, 'sortaments');
+			]; 
+			*/
+			var gSortamentsModel = new JSONModel();
+			gSortamentsModel.loadData('/api/sortaments');			
 
 			var gParamsModel = new JSONModel();
 			gParamsModel.loadData('/api/params');
 			gParamsModel.attachRequestCompleted(function() {
 			});
 
-			this.setModel(gParamsModel, 'gParams');
+			this
+				.setModel(gSortamentsModel, 'gSortaments')
+				.setModel(gParamsModel, 'gParams');
 
 
 			this.getRouter().initialize();

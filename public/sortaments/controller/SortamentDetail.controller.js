@@ -1,8 +1,9 @@
 sap.ui.define([
   'sap/ui/core/mvc/Controller',
   'sap/ui/model/json/JSONModel',
-  'sap/m/Popover'
-], function (Controller, JSONModel, Popover) {
+  'sap/m/Popover',
+  'sap/m/MessageToast'
+], function (Controller, JSONModel, Popover, MessageToast) {
   "use strict";
   return Controller.extend("sortament.sortaments.controller.SortamentDetail", {
     onInit: function () {
@@ -10,14 +11,135 @@ sap.ui.define([
       oRouter.getRoute("selectedSortament").attachPatternMatched(this._onSortamentDetailMatched, this);
 
       this.mCatalogSizeModel = new JSONModel();
-      this.getView().setModel(this.mCatalogSizeModel, 'mCatalogSize');
+
+      this.mSettingsModel = new JSONModel();
+
+      this.getView()
+        .setModel(this.mCatalogSizeModel, 'mCatalogSize')
+        .setModel(this.mSettingsModel, 'mSettings');
     },
 
     _onSortamentDetailMatched: function (oEvent) {
       this.getView().bindElement({
         path: "/" + oEvent.getParameter("arguments").sortPath,
-        model: "sortaments"
+        model: "gSortaments"
       });
+      this.mSettingsModel.setData({  
+        listMode: 'MultiSelect',
+        itemMode: 'Inactive',
+        visible: true
+      });
+    },
+
+    onSelectMode: function(oEvent) {
+      var sType = oEvent.getParameter("selectedItem").getKey();
+
+      switch (sType) {
+        case 'multiple':
+          this.mSettingsModel.setProperty('/listMode', 'MultiSelect');
+          this.mSettingsModel.setProperty('/itemMode', 'Inactive');
+          break;
+        case 'delete':
+          this.mSettingsModel.setProperty('/listMode', 'Delete');
+          this.mSettingsModel.setProperty('/itemMode', 'Inactive');
+          break;
+        case 'edit':
+          this.mSettingsModel.setProperty('/listMode', 'None');
+          this.mSettingsModel.setProperty('/itemMode', 'Detail');
+          break;
+      }
+    },
+
+    rowFactory: function(sId, oContext) {
+      var aColumns = this.getView()
+        .getBindingContext('gSortaments').getObject().params;
+      
+      var aCells = [];
+
+      aColumns.forEach(function(oColumn) {
+        aCells.push(
+          new sap.m.Input({ 
+            value: '{gSortaments>' + oColumn._id + '}',
+            editable: false,
+            valueLiveUpdate: true
+          })
+        );
+      }, this);
+
+      return new sap.m.ColumnListItem({
+        cells: aCells,
+        type: '{mSettings>/itemMode}'
+      });
+    },
+
+    onAddEmptyRow: function() {
+      var oSortament = this.getView().getBindingContext('gSortaments').getObject();
+      var aColumns = oSortament.params;
+      var oNewRow = {};
+
+      aColumns.forEach(function(oColumn) {
+        oNewRow[oColumn._id] = '';
+      });
+
+      oSortament.data.push(oNewRow);
+
+      this.getView().getModel('gSortaments').updateBindings(true);
+
+      var aItems = this.byId('sortamentDetailTable').getItems();
+      var oRow = aItems[aItems.length - 1];
+      oRow.getCells().forEach(function(oInput) {
+        oInput.setEditable(true);
+      });
+      
+      this.mSettingsModel.setProperty('/visible', false);
+      this.mSettingsModel.setProperty('/listMode', 'None');
+      this.mSettingsModel.setProperty('/itemMode', 'Inactive');
+    },
+
+    onCancelAddRow: function() {
+      var oSortament = this.getView().getBindingContext('gSortaments').getObject();
+      oSortament.data.length = oSortament.data.length - 1;
+      this.getView().getModel('gSortaments').updateBindings(true);
+
+      this.mSettingsModel.setData({  
+        listMode: 'MultiSelect',
+        itemMode: 'Inactive',
+        visible: true
+      });
+    },
+
+    onApplyAddRow: function() {
+      this.mSettingsModel.setData({  
+        listMode: 'MultiSelect',
+        itemMode: 'Inactive',
+        visible: true
+      });
+    },
+
+    onSaveChanges: function() {
+      var oSortament = this.getView().getBindingContext('gSortaments').getObject();
+      var oSendData = {
+        id: oSortament._id,
+        data: { data: oSortament.data }
+      };
+
+      $.ajax({
+        type: 'PUT',
+        url: '/api/sortaments',
+        contentType: 'application/json',
+        data: JSON.stringify(oSendData),
+        success: function(data, textStatus, jqXHR) {
+          MessageToast.show('Изменения успешно сохранены');
+          this.getView().getModel('gSortaments').loadData('/api/sortaments');          
+        }.bind(this),
+        error: function(jqXHR, textStatus, errorThrown) {
+          MessageToast.show('Произошла ошибка при сохранении изменений');
+        }.bind(this)
+      });
+    },
+
+    onResetChanges: function() {
+      this.getView().getModel('gSortaments').loadData('/api/sortaments'); 
     },
 
     onSortamentDownload: function () {

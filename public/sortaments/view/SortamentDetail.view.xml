@@ -4,203 +4,109 @@
   xmlns:u="sap.ui.unified"
   xmlns="sap.m"
   xmlns:mvc="sap.ui.core.mvc"
+	xmlns:core="sap.ui.core"
   displayBlock="true">
-  <Page title="{sortaments>name} ({sortaments>category})">
+  <Page title="{gSortaments>name} ({gSortaments>standart})">
 		<content>
 			<VBox class="sapUiSmallMarginTop" alignItems="Center">
 				<Image
-					src="{sortaments>image}"
-					densityAware="false"
-					/>
-				<Table 
-					id="sortamentTable"
+					src="{gSortaments>photo}"
+					densityAware="false"/>
+				<Table
+					id="sortamentDetailTable"
+					mode="{mSettings>/listMode}"
+					delete="onDeleteTableRow"
+					class="sortamentTable sapUiSmallMarginTop sapUiSmallMarginBottom"
+					showNoData="true"
+					columns="{gSortaments>params}"
 					items="{
-						path: 'sortaments>list'
-					}"
-					mode="MultiSelect"
-					class="sortamentTable"
-					growing="true"
-					growingThreshold="50">
+						path: 'gSortaments>data',
+						factory: '.rowFactory'}">
 					<headerToolbar>
-						<Toolbar height="2rem">
+						<Toolbar>
 							<content>
+								<Title text="{gSortaments>name}" level="H5"/>
 								<ToolbarSpacer />
-								<Button 
-									type="Transparent" 
-									icon="sap-icon://download" 
-									press="onOpenSizeCatalogDialog" />
+								<Label visible="{mSettings>/visible}" text="Режим" labelFor="detailMode"/>
+								<Select
+									id="detailMode"
+									visible="{mSettings>/visible}"
+									selectedKey="multiple"
+									change="onSelectMode">
+									<items>
+										<core:Item key="multiple" text="Мультивыбор" />
+										<core:Item key="edit" text="Редактирование" />
+										<core:Item key="delete" text="Удаление" />
+									</items>
+								</Select>
+								<ToolbarSeparator/>
+								<Button visible="{mSettings>/visible}" icon="sap-icon://download" press="onOpenSizeCatalogDialog"/>
+								<Button visible="{mSettings>/visible}" icon="sap-icon://add" press="onAddEmptyRow"/>
 							</content>
 						</Toolbar>
 					</headerToolbar>
 					<columns>
 						<Column>
-							<Text text="Тип"/>
-						</Column>
-						<Column>
-							<VBox>
-								<Text text="h,"/>
-								<Text text="мм"/>
-							</VBox>
-						</Column>
-						<Column>
-							<VBox>
-								<Text text="b,"/>
-								<Text text="мм"/>
-							</VBox>
-						</Column>
-						<Column>
-							<VBox>
-								<Text text="s,"/>
-								<Text text="мм"/>
-							</VBox>
-						</Column>
-						<Column>
-							<VBox>
-								<Text text="t,"/>
-								<Text text="мм"/>
-							</VBox>
-						</Column>
-						<Column>
-							<VBox>
+							<VBox tooltip="{gSortaments>name}">
 								<HBox>
-									<Text text="r"/>
-									<Text class="subscript" text="1"/>
-									<Text text=","/>
+									<Text text="{= ${gSortaments>var_name} ? ${gSortaments>var_name} : ${gSortaments>name} }"/>
+									<Text 
+										class="subscript" 
+										text="{gSortaments>var_index}"
+										visible="{= !!${gSortaments>var_index} }"/>
+									<Text 
+										visible="{= !!${gSortaments>unit_numerator_name} }" 
+										text=","/>
 								</HBox>
-								<Text text="мм"/>
-							</VBox>
-						</Column>
-						<Column>
-							<VBox>
-								<Text text="A,"/>
-								<HBox>
-									<Text text="см"/>
-									<Text class="superscript" text="2"/>
+								<HBox visible="{= !!${gSortaments>unit_numerator_name} }">
+									<Text text="{gSortaments>unit_numerator_name}"/>
+									<Text 
+										class="superscript"
+										visible="{= !!${gSortaments>unit_numerator_degree} }"
+										text="{gSortaments>unit_numerator_degree}"/>
+									<Text 
+										text="/" 
+										visible="{gSortaments>unit_fraction}"/>
+									<Text
+										visible="{= !!${gSortaments>unit_denominator_name} }"
+										text="{gSortaments>unit_denominator_name}"/>
+									<Text 
+										class="superscript"
+										visible="{= !!${gSortaments>unit_denominator_degree} }"
+										text="{gSortaments>unit_denominator_degree}"/>
 								</HBox>
-							</VBox>
-						</Column>
-						<Column>
-							<VBox>
-								<Text text="P,"/>
-								<HBox>
-									<Text text="кг/м"/>
-									<Text class="superscript" text="2"/>
-								</HBox>
-							</VBox>
-						</Column>
-						<Column>
-							<VBox>
-								<HBox>
-									<Text text="I"/>
-									<Text class="subscript" text="y"/>
-									<Text text=","/>
-								</HBox>
-								<HBox>
-									<Text text="см"/>
-									<Text class="superscript" text="4"/>
-								</HBox>
-							</VBox>
-						</Column>
-						<Column>
-							<VBox>
-								<HBox>
-									<Text text="W"/>
-									<Text class="subscript" text="y"/>
-									<Text text=","/>
-								</HBox>
-								<HBox>
-									<Text text="см"/>
-									<Text class="superscript" text="3"/>
-								</HBox>
-							</VBox>
-						</Column>
-						<Column>
-							<VBox>
-								<HBox>
-									<Text text="S"/>
-									<Text class="subscript" text="y"/>
-									<Text text=","/>
-								</HBox>
-								<HBox>
-									<Text text="см"/>
-									<Text class="superscript" text="3"/>
-								</HBox>
-							</VBox>
-						</Column>
-						<Column>
-							<VBox>
-								<HBox>
-									<Text text="i"/>
-									<Text class="subscript" text="y"/>
-									<Text text=","/>
-								</HBox>
-								<Text text="мм"/>
-							</VBox>
-						</Column>
-						<Column>
-							<VBox>
-								<HBox>
-									<Text text="I"/>
-									<Text class="subscript" text="z"/>
-									<Text text=","/>
-								</HBox>
-								<HBox>
-									<Text text="см"/>
-									<Text class="superscript" text="4"/>
-								</HBox>
-							</VBox>
-						</Column>
-						<Column>
-							<VBox>
-								<HBox>
-									<Text text="W"/>
-									<Text class="subscript" text="z"/>
-									<Text text=","/>
-								</HBox>
-								<HBox>
-									<Text text="см"/>
-									<Text class="superscript" text="3"/>
-								</HBox>
-							</VBox>
-						</Column>
-						<Column>
-							<VBox>
-								<HBox>
-									<Text text="i"/>
-									<Text class="subscript" text="z"/>
-									<Text text=","/>
-								</HBox>
-								<Text text="мм"/>
 							</VBox>
 						</Column>
 					</columns>
-					<items>
-						<ColumnListItem>
-							<cells>
-								<Text text="{sortaments>type}"/>
-								<Text text="{sortaments>h}"/>
-								<Text text="{sortaments>b}"/>
-								<Text text="{sortaments>s}"/>
-								<Text text="{sortaments>t}"/>
-								<Text text="{sortaments>R1}"/>
-								<Text text="{sortaments>A}"/>
-								<Text text="{sortaments>P}"/>
-								<Text text="{sortaments>Ly}"/>
-								<Text text="{sortaments>Wy}"/>
-								<Text text="{sortaments>Sy}"/>
-								<Text text="{sortaments>Iy}"/>
-								<Text text="{sortaments>Lz}"/>
-								<Text text="{sortaments>Wz}"/>
-								<Text text="{sortaments>Iz}"/>
-							</cells>
-						</ColumnListItem>
-					</items>
-				</Table>	
+				</Table>
 			</VBox>
 		</content>
 		<footer>
 			<Toolbar>
 				<ToolbarSpacer/>
+				<Button 
+					visible="{= !${mSettings>/visible} }" 
+					icon="sap-icon://accept" 
+					text="Применить" 
+					type="Accept"
+					press="onApplyAddRow"/>
+				<Button
+					visible="{= !${mSettings>/visible} }"
+					icon="sap-icon://decline"
+					text="Отменить" 
+					type="Reject"
+					press="onCancelAddRow"/>
+				<ToolbarSpacer/>
+				<Button 
+					visible="{= ${mSettings>/visible} }" 
+					icon="sap-icon://save" 
+					type="Emphasized"
+					press="onSaveChanges"/>
+				<Button
+					visible="{= ${mSettings>/visible} }"
+					icon="sap-icon://reset" 
+					type="Reject"
+					press="onResetChanges"/>
 			</Toolbar>
 		</footer>
   </Page>

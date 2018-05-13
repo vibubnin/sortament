@@ -3,6 +3,7 @@
   xmlns:l="sap.ui.layout"
   xmlns="sap.m"
   xmlns:mvc="sap.ui.core.mvc"
+	xmlns:core="sap.ui.core"
   displayBlock="true">
   <Page>
 		<customHeader>
@@ -26,25 +27,37 @@
 			<List
 				id="sortamentList"
 				items="{
-					path: 'sortaments>/',
+					path: 'gSortaments>/',
 					sorter: {
-				    path: 'category',
+				    path: 'standart',
 				    group: true
 			    }
 		  	}"
 				selectionChange="onSelectSortament"
-				mode="SingleSelectMaster"
+				mode="{mParamSettings>/masterListMode}"
 				class="sortamentList">
 				<items>
 					<StandardListItem
+						type="{mParamSettings>/masterItemMode}"
 						class="sortamentItem"
-						tooltip="{sortaments>name}"
-						title="{sortaments>name}"/>
+						tooltip="{gSortaments>name}"
+						title="{gSortaments>name}"/>
 				</items>
 			</List>
 		</content>
 		<footer>
 			<Toolbar>
+				<Label text="Режим" labelFor="state"/>
+				<Select
+					id="state"
+					selectedKey="navigation"
+					change="onSelectMasterMode">
+					<items>
+						<core:Item key="navigation" text="Навигация" />
+						<core:Item key="edit" text="Редактирование" />
+						<core:Item key="delete" text="Удаление" />
+					</items>
+				</Select>
 				<ToolbarSpacer/>
 				<Button
 					icon="sap-icon://list"

@@ -5,7 +5,7 @@ const sortamentSchema = new mongoose.Schema({
   standart: { type: String, required: true },
   photo:    { type: String, default: '' },
   params: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Param' }],
-  data:   [{ type: mongoose.Schema.Types.ObjectId, ref: 'Data' }]
+  data:   []
 }, { versionKey: false });
 
 module.exports = mongoose.model('Sortament', sortamentSchema);

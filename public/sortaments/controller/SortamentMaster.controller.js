@@ -11,7 +11,9 @@ sap.ui.define([
       this.mParamModel = new JSONModel();
       this.mParamSettingsModel = new JSONModel({
         editMode: false,
-        visibleNavBackBtn: false
+        visibleNavBackBtn: false,
+        masterListMode: 'SingleSelectMaster',
+        masterItemMode: 'Inactive'
       });
       this.getView()
         .setModel(this.mParamModel, 'mParam')
@@ -29,6 +31,25 @@ sap.ui.define([
         unit_denominator_name: '',
         unit_denominator_degree: ''
       });
+    },
+
+    onSelectMasterMode: function(oEvent) {
+      var sType = oEvent.getParameter("selectedItem").getKey();
+
+      switch (sType) {
+        case 'navigation':
+          this.mParamSettingsModel.setProperty('/masterListMode', 'SingleSelectMaster');
+          this.mParamSettingsModel.setProperty('/masterItemMode', 'Inactive');
+          break;
+        case 'delete':
+          this.mParamSettingsModel.setProperty('/masterListMode', 'Delete');
+          this.mParamSettingsModel.setProperty('/masterItemMode', 'Inactive');
+          break;
+        case 'edit':
+          this.mParamSettingsModel.setProperty('/masterListMode', 'None');
+          this.mParamSettingsModel.setProperty('/masterItemMode', 'Detail');
+          break;
+      }
     },
 
     onSearchParam: function(oEvent) {
@@ -79,7 +100,7 @@ sap.ui.define([
 
     onSelectSortament: function (oEvent) {
     	var oItem = oEvent.getParameter('listItem');
-    	var sPath = oItem.getBindingContext('sortaments').getPath();
+    	var sPath = oItem.getBindingContext('gSortaments').getPath();
     	var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
 			oRouter.navTo("selectedSortament", {
 				sortPath: sPath.substr(1)
