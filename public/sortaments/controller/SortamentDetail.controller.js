@@ -17,6 +17,11 @@ sap.ui.define([
       this.getView()
         .setModel(this.mCatalogSizeModel, 'mCatalogSize')
         .setModel(this.mSettingsModel, 'mSettings');
+      
+      this.oOldObj = {
+        data: {},
+        index: null
+      } 
     },
 
     _onSortamentDetailMatched: function (oEvent) {
@@ -27,7 +32,8 @@ sap.ui.define([
       this.mSettingsModel.setData({  
         listMode: 'MultiSelect',
         itemMode: 'Inactive',
-        visible: true
+        visible: true,
+        addBtn: false 
       });
     },
 
@@ -61,15 +67,37 @@ sap.ui.define([
           new sap.m.Input({ 
             value: '{gSortaments>' + oColumn._id + '}',
             editable: false,
-            valueLiveUpdate: true
+            valueLiveUpdate: true,
+            addBtn: false 
           })
         );
       }, this);
 
       return new sap.m.ColumnListItem({
         cells: aCells,
-        type: '{mSettings>/itemMode}'
+        type: '{mSettings>/itemMode}',
+        detailPress: this.onDetailPressRow.bind(this)
       });
+    },
+
+    onDetailPressRow: function(oEvent) {
+      var oItem = oEvent.getSource();
+
+      oItem.getCells().forEach(function(oInput) {
+        oInput.setEditable(true);
+      });
+
+      var oContext = oItem.getBindingContext('gSortaments');
+
+      this.oOldObj.index = +oContext.sPath.slice(oContext.sPath.lastIndexOf('/') + 1);
+      this.oOldObj.data = $.extend({}, oContext.getObject());
+
+      this.mSettingsModel.setProperty('/visible', false);
+      this.mSettingsModel.setProperty('/listMode', 'None');
+      this.mSettingsModel.setProperty('/itemMode', 'Inactive');      
+      this.mSettingsModel.setProperty('/addBtn', false);      
+
+      debugger
     },
 
     onAddEmptyRow: function() {
@@ -94,26 +122,56 @@ sap.ui.define([
       this.mSettingsModel.setProperty('/visible', false);
       this.mSettingsModel.setProperty('/listMode', 'None');
       this.mSettingsModel.setProperty('/itemMode', 'Inactive');
+      this.mSettingsModel.setProperty('/addBtn', true);   
     },
 
     onCancelAddRow: function() {
       var oSortament = this.getView().getBindingContext('gSortaments').getObject();
-      oSortament.data.length = oSortament.data.length - 1;
+      var bCancelAdd = this.mSettingsModel.getProperty('/addBtn');
+
+      if (bCancelAdd) {
+        oSortament.data.length = oSortament.data.length - 1;
+      } else {
+        oSortament.data[this.oOldObj.index] = this.oOldObj.data;
+        this.oOldObj.index = null;
+        this.oOldObj.data = {};
+      }
+
       this.getView().getModel('gSortaments').updateBindings(true);
 
       this.mSettingsModel.setData({  
         listMode: 'MultiSelect',
         itemMode: 'Inactive',
-        visible: true
+        visible: true,
+        addBtn: false
       });
+
+      this.byId('detailMode').setSelectedKey('multiple');
     },
 
     onApplyAddRow: function() {
+      var bCancelAdd = this.mSettingsModel.getProperty('/addBtn'); 
+      var aItems = this.byId('sortamentDetailTable').getItems();
+      var oItem;
+          
+      if (bCancelAdd) {
+        oItem = aItems[aItems.length - 1];
+
+      } else {
+        oItem = aItems[this.oOldObj.index];
+      }
+
+      oItem.getCells().forEach(function(oInput) {
+        oInput.setEditable(false);
+      });
+
       this.mSettingsModel.setData({  
         listMode: 'MultiSelect',
         itemMode: 'Inactive',
         visible: true
       });
+
+      this.byId('detailMode').setSelectedKey('multiple');
     },
 
     onSaveChanges: function() {
