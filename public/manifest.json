@@ -82,7 +82,12 @@
 				{
           "pattern": "newSortament",
           "name": "newSortament",
-          "target": "newSortament"
+          "target": ["sortamentMaster", "newSortament"]
+				},
+				{
+          "pattern": "editSortament/{id}",
+          "name": "editSortament",
+          "target": ["sortamentMaster", "editSortament"]
         }
 			],
 			"targets": {
@@ -99,6 +104,12 @@
           "controlAggregation": "detailPages"
 				},
 				"newSortament": {
+          "viewPath": "sortament.sortaments.view",
+          "viewName": "NewSortament",
+          "viewId": "newSortament",
+          "controlAggregation": "detailPages"
+				},
+				"editSortament": {
           "viewPath": "sortament.sortaments.view",
           "viewName": "NewSortament",
           "viewId": "newSortament",

@@ -11,7 +11,6 @@ exports.createSortament = (req, res) => {
   }; 
 
   req.body.columns.forEach((oColumn) => {
-    // oSortament.params.push( new mongoose.Types.ObjectId(oColumn._id) );
     oSortament.params.push(oColumn._id);
   });
 
@@ -39,6 +38,21 @@ exports.getSortaments = (req, res) => {
       }
   
       res.json(sortaments);
+    });
+};
+
+exports.getSortament = (req, res) => {
+  Sortament
+    .findById(req.query.id)
+    .populate('params')
+    .exec((err, sortament) => {
+      if (err) {
+        res.status(500);
+        res.json({ message: { level: 'error', text: err.message } });
+        console.log(err);
+      }
+  
+      res.json(sortament);
     });
 };
 

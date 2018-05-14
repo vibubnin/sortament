@@ -1,12 +1,14 @@
 sap.ui.define([
   'sap/ui/core/mvc/Controller',
-  'sap/ui/model/json/JSONModel'
-], function (Controller, JSONModel) {
+  'sap/ui/model/json/JSONModel',
+  'sap/m/MessageToast'
+], function (Controller, JSONModel, MessageToast) {
   "use strict";
   return Controller.extend("sortament.sortaments.controller.NewSortament", {
     onInit: function () {
       var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
       oRouter.getRoute("newSortament").attachPatternMatched(this._onNewSortamentMatched, this);
+      oRouter.getRoute("editSortament").attachPatternMatched(this._onEditSortamentMatched, this);
 
       this.mHeadersModel = new JSONModel({
         count: 1,
@@ -15,12 +17,16 @@ sap.ui.define([
       this.mNewSortamentModel = new JSONModel({
         name: '', standart: '', photo: '', columns: [], rows: []
       });
+
       this.getView()
         .setModel(this.mHeadersModel, 'mHeaders')
         .setModel(this.mNewSortamentModel, 'mNewSortament');
+
+      this._routerName = '';
+      this._sortamentId = '';
     },
 
-    _onNewSortamentMatched: function (oEvent) {
+    _onNewSortamentMatched: function (oEvent) {    
       this.byId('headersTable').setVisible(false);
       this.mHeadersModel.setData({
         count: 1,
@@ -29,6 +35,48 @@ sap.ui.define([
       this.mNewSortamentModel.setData({
         name: '', standart: '', photo: '', columns: [], rows: []
       });
+
+      this.byId('createSortamentWizard').goToStep(this.byId('commonParamsStep')); 
+      this._routerName = 'newSortament';            
+    },
+
+    _onEditSortamentMatched: function (oEvent) {
+      this._sortamentId = oEvent.getParameter('arguments').id;
+      $.ajax({
+        type: 'GET',
+        url: '/api/sortament?id=' + this._sortamentId,
+        contentType: 'application/json',
+        success: function(oData, textStatus, jqXHR) {
+          var oSortamentData = {
+            name: oData.name,
+            standart: oData.standart,
+            photo: oData.photo,
+            columns: oData.params,
+            rows: oData.data
+          };
+          this.mNewSortamentModel.setData(oSortamentData);
+
+          var oHeadersData = {
+            count: oData.params.length,
+            data: []
+          }
+          oData.params.forEach(function(oParam, index) {
+            if (!index) {
+              oHeadersData.data.push({ position: 1, remove: false, paramId: oParam._id });
+            } else {
+              oHeadersData.data.push({ position: index + 1, remove: true, paramId: oParam._id });
+            }
+          });
+          this.mHeadersModel.setData(oHeadersData);
+          this.onShowTable();  
+          this.byId('createSortamentWizard').setCurrentStep(this.byId('dataTableStep'));       
+        }.bind(this),
+        error: function(jqXHR, textStatus, errorThrown) {
+          MessageToast.show('Произошла ошибка при получении сортамента');
+        }.bind(this),
+      });
+
+      this._routerName = 'editSortament'; 
     },
 
     onNavBack: function () {
@@ -152,19 +200,59 @@ sap.ui.define([
     onSaveSortament: function() {
       var oSendData = this.mNewSortamentModel.getData();
 
-      $.ajax({
-        type: 'POST',
-        url: '/api/sortaments',
-        contentType: 'application/json',
-        data: JSON.stringify(oSendData),
-        success: function(data, textStatus, jqXHR) {
-          MessageToast.show('Сортамент успешно создан');
-          // this.getView().getModel('').loadData('/api/params');          
-        }.bind(this),
-        error: function(jqXHR, textStatus, errorThrown) {
-          MessageToast.show('Произошла ошибка при создании сортамента');
-        }.bind(this),
-      });
+      if (this._routerName === 'newSortament') {
+        $.ajax({
+          type: 'POST',
+          url: '/api/sortaments',
+          contentType: 'application/json',
+          data: JSON.stringify(oSendData),
+          success: function(oData, textStatus, jqXHR) {
+            MessageToast.show('Сортамент успешно создан');
+            this.getView().getModel('gSortaments').loadData('/api/sortaments');
+            var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+            oRouter.navTo("editSortament", {
+              id: oData._id
+            });          
+          }.bind(this),
+          error: function(jqXHR, textStatus, errorThrown) {
+            MessageToast.show('Произошла ошибка при создании сортамента');
+          }.bind(this),
+        });
+      }
+
+      if (this._routerName === 'editSortament') {
+
+        var oSortament = {
+          name: oSendData.name,
+          standart: oSendData.standart,
+          photo: oSendData.photo,
+          params: [],
+          data: oSendData.rows
+        }; 
+      
+        oSendData.columns.forEach(function(oColumn) {
+          oSortament.params.push(oColumn._id);
+        });
+
+        oSendData = {
+          id: this._sortamentId,
+          data: oSortament
+        };
+
+        $.ajax({
+          type: 'PUT',
+          url: '/api/sortaments',
+          contentType: 'application/json',
+          data: JSON.stringify(oSendData),
+          success: function(data, textStatus, jqXHR) {
+            MessageToast.show('Сортамент успешно изменен');
+            this.getView().getModel('gSortaments').loadData('/api/sortaments');   
+          }.bind(this),
+          error: function(jqXHR, textStatus, errorThrown) {
+            MessageToast.show('Произошла ошибка при изменении сортамента');
+          }.bind(this),
+        });
+      }
 
     }
 

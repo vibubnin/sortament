@@ -20,6 +20,9 @@ router.route(api.path + api.collection.sortaments)
 	.put(sortamentController.updateSortament)
 	.delete(sortamentController.deleteSortament);
 
+router.route(api.path + 'sortament')
+	.get(sortamentController.getSortament);
+
 router.route(api.path + api.collection.params)
 	.get(paramController.getParams)
 	.post(paramController.createParam)

@@ -29,6 +29,7 @@
         <WizardStep
           id="commonParamsStep"
           title="Общие параметры"
+          activate="optionalStepActivation"
           validated="true">
           <f:SimpleForm
             editable="true">
@@ -54,18 +55,10 @@
               text="Удалить"
               icon="sap-icon://delete"/>
 
-            <Label/>
-              <!-- <FlexBox
-                height="200px"
-                alignItems="Start"
-                justifyContent="Center"
-                visible="{= ${mPerson>/Photo} === '' ? false : true}"> -->
-                <Image 
-                  src="{mNewSortament>/photo}" 
-                  height="250px" 
-                  width="250px"
-                  visible="{= !!${mNewSortament>/photo} }"/>
-              <!-- </FlexBox> -->
+            <Label/>             
+            <Image 
+              src="{mNewSortament>/photo}"
+              densityAware="false"/>               
           </f:SimpleForm>
         </WizardStep>
         <WizardStep 
@@ -221,17 +214,6 @@
 		<footer>
 			<Toolbar>
 				<ToolbarSpacer/>
-				<!-- <Button
-					icon="sap-icon://list"
-					type="Transparent"
-					tooltip="Открыть редактор параметров"
-					press="onOpenParamsDialog"/>
-				<ToolbarSeparator/> -->
-				<!-- <Button
-					icon="sap-icon://create-form"
-					type="Transparent"
-					tooltip="Отмена"
-          press="nav"/> -->
 			</Toolbar>
 		</footer>
   </Page>

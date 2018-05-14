@@ -98,6 +98,52 @@ sap.ui.define([
       oParamsNavCon.to(this.byId('paramFormPage'));
     },
 
+    onDeleteSortament: function(oEvent) {
+      var sId = oEvent
+        .getParameter('listItem')
+        .getBindingContext('gSortaments')
+        .getObject()
+        ._id; 
+      var oSendData = { id: sId };
+
+      MessageBox.warning(
+				"Вы уверены, что хотите удалить сортамент?",
+				{
+					actions: [sap.m.MessageBox.Action.OK, sap.m.MessageBox.Action.CANCEL],
+					styleClass: "sapUiSizeCompact",
+					onClose: function(sAction) {
+            if (sAction === 'OK') {
+              $.ajax({
+                type: 'DELETE',
+                url: '/api/sortaments',
+                contentType: 'application/json',
+                data: JSON.stringify(oSendData),
+                success: function(data, textStatus, jqXHR) {
+                  MessageToast.show('Сортамент успешно удален');
+                  this.getView().getModel('gSortaments').loadData('/api/sortaments');
+                  var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+                    oRouter.navTo("beginSortament");          
+                }.bind(this),
+                error: function(jqXHR, textStatus, errorThrown) {
+                  MessageToast.show('Произошла ошибка при удалении сортамента');
+                }.bind(this),
+              });
+            } 
+					}.bind(this)
+				}
+			);
+    },
+
+    onNavToEditSortament: function(oEvent) {
+      var sId = oEvent.getSource()
+        .getBindingContext('gSortaments').getObject()._id;
+
+      var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+      oRouter.navTo("editSortament", {
+        id: sId
+      });
+    },
+
     onSelectSortament: function (oEvent) {
     	var oItem = oEvent.getParameter('listItem');
     	var sPath = oItem.getBindingContext('gSortaments').getPath();

@@ -35,13 +35,15 @@
 		  	}"
 				selectionChange="onSelectSortament"
 				mode="{mParamSettings>/masterListMode}"
-				class="sortamentList">
+				class="sortamentList"
+				delete="onDeleteSortament">
 				<items>
 					<StandardListItem
 						type="{mParamSettings>/masterItemMode}"
 						class="sortamentItem"
 						tooltip="{gSortaments>name}"
-						title="{gSortaments>name}"/>
+						title="{gSortaments>name}"
+						detailPress="onNavToEditSortament"/>
 				</items>
 			</List>
 		</content>
