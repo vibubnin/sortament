@@ -100,6 +100,17 @@ sap.ui.define([
       debugger
     },
 
+    onDeleteTableRow: function(oEvent) {
+      var oContext = oEvent.getParameter('listItem').getBindingContext('gSortaments');
+      var iIndex = +oContext.sPath.slice(oContext.sPath.lastIndexOf('/') + 1);
+      var oData = this.getView().getBindingContext('gSortaments').getObject();
+      oData.data = oData.data.filter(function(item, i) {
+        return i !== iIndex;
+      });
+
+      this.getView().getModel('gSortaments').updateBindings(true);
+    },
+
     onAddEmptyRow: function() {
       var oSortament = this.getView().getBindingContext('gSortaments').getObject();
       var aColumns = oSortament.params;
