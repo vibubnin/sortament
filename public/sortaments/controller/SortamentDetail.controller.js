@@ -274,13 +274,25 @@ sap.ui.define([
         sTarget += '\n';
       }, this);
 
-      var element = document.createElement('a');
-      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(sTarget));
-      element.setAttribute('download', oCataloSizeData.fileName);
-      element.style.display = 'none';
-      document.body.appendChild(element);
-      element.click();
-      document.body.removeChild(element);
+
+      $.ajax({
+        type: 'POST',
+        url: '/api/downLoadFile',
+        contentType: 'application/json',
+        data: JSON.stringify({ data: sTarget }),
+        success: function(data, textStatus, jqXHR) {
+          var element = document.createElement('a');
+          element.setAttribute('href', 'data:text/plain;charset=windows-1251,' + encodeURIComponent(sTarget));
+          element.setAttribute('download', oCataloSizeData.fileName);
+          element.style.display = 'none';
+          document.body.appendChild(element);
+          element.click();
+          document.body.removeChild(element);                   
+        }.bind(this),
+        error: function(jqXHR, textStatus, errorThrown) {
+          MessageToast.show('Произошла ошибка');
+        }.bind(this),
+      });
     },
 
     handleUploadComplete: function(oEvent) {
