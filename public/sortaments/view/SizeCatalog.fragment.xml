@@ -58,34 +58,23 @@
 							singleContainerFullSize="false" />
 					</f:layout>
 					<f:formContainers>
-						<f:FormContainer formElements="{mCatalogSize>/meta}">
+						<f:FormContainer formElements="{mCatalogSize>/headers}">
 							<f:formElements>
 								<f:FormElement label="{
-									path: 'mCatalogSize>',
+									path: 'mCatalogSize>fileMeta',
 									formatter: '.handleLabelFtr'
 								}">
 									<f:fields>
 										<Select 
 											forceSelection="false"
 											autoAdjustWidth="true"
-											selectedKey="0">
+											selectedKey="{mCatalogSize>paramId}"
+											items="{
+												path: 'gSortaments>params',
+												templateShareable: false
+											}">
 											<items>
-												<core:Item text="Не назначено" key="0"/>
-												<core:Item text="Тип" key="1"/>
-												<core:Item text="Высота двутавра" key="2"/>
-												<core:Item text="Ширина полки" key="3"/>
-												<core:Item text="Толщина полки" key="4"/>
-												<core:Item text="Толщина стенки" key="5"/>
-												<core:Item text="Радиус сопряжения" key="6"/>
-												<core:Item text="Площадь сечения" key="7"/>
-												<core:Item text="Масса 1м длины" key="8"/>
-												<core:Item text="Момент инерции по оси X" key="9"/>												
-												<core:Item text="Момент сопротивления по оси Х" key="10"/>												
-												<core:Item text="Статический момент полусечения по оси Х" key="11"/>												
-												<core:Item text="Радиус инерции по оси Х" key="12"/>												
-												<core:Item text="Момент инерции по оси Y" key="13"/>												
-												<core:Item text="Момент сопротивления по оси Y" key="14"/>												
-												<core:Item text="Радиус инерции по оси Y" key="15"/>																								
+												<core:Item text="{gSortaments>name}" key="{gSortaments>_id}"/>																						
 											</items>
 										</Select>
 									</f:fields>
@@ -101,7 +90,7 @@
 			<Button
 				type="Emphasized"
 				text="Выгрузить"
-				press="onCloseSizeCatalogDialog"/>
+				press="onDownloadSizeCatalog"/>
 		</beginButton>
 		<endButton>
 			<Button

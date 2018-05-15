@@ -211,7 +211,7 @@ sap.ui.define([
       this.getView().getModel('gSortaments').loadData('/api/sortaments'); 
     },
 
-    onSortamentDownload: function () {
+    on1SortamentDownload: function () {
       var oTable = this.byId('sortamentTable'),
           aContexts = oTable.getSelectedContexts(),
           oObject,
@@ -247,7 +247,40 @@ sap.ui.define([
     onChangeFile: function(oEvent) {
       var sValue = oEvent.getParameter('newValue');
       if (sValue) {
+        this._sFileName = sValue;
       }
+    },
+
+    onDownloadSizeCatalog: function() {
+      var oCataloSizeData = this.mCatalogSizeModel.getData();
+      var sTarget = oCataloSizeData.firstRow + '\n';
+
+      var aItemContexts = this.byId('sortamentDetailTable').getSelectedContexts(true);
+      aItemContexts.forEach(function(oContext) {
+        var oObj = oContext.getObject();
+
+        oCataloSizeData.headers.forEach(function(oHeader, iIndex) {
+          if (!oHeader.paramId) {
+            sTarget += oCataloSizeData.row[iIndex];
+          } else {
+            sTarget += oObj[oHeader.paramId];
+          }
+
+          if (iIndex !== oCataloSizeData.headers.length - 1) {
+            sTarget += ','
+          }
+        });
+
+        sTarget += '\n';
+      }, this);
+
+      var element = document.createElement('a');
+      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(sTarget));
+      element.setAttribute('download', oCataloSizeData.fileName);
+      element.style.display = 'none';
+      document.body.appendChild(element);
+      element.click();
+      document.body.removeChild(element);
     },
 
     handleUploadComplete: function(oEvent) {
@@ -259,13 +292,22 @@ sap.ui.define([
       aMeta[0] = 'Тип##';
 
       var aRow = aData[1].split(',');
+      var aHeaders = [];
 
-      this.mCatalogSizeModel.setData({
-        meta: aMeta,
-        row: aRow
+      aMeta.forEach(function(sMeta) {
+        aHeaders.push({
+          fileMeta: sMeta,
+          paramId: '' 
+        });
       });
 
-			
+
+      this.mCatalogSizeModel.setData({
+        headers: aHeaders,
+        firstRow: aData[0],
+        row: aRow,
+        fileName: this._sFileName
+      });
     },
     
     handleLabelFtr: function(sLabel) {
