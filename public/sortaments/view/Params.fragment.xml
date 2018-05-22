@@ -127,7 +127,9 @@
               <Label text="Название" required="true"/>
               <Input
                 value="{mParam>/name}"
-                valueLiveUpdate="true"/>
+                valueLiveUpdate="true"
+                liveChange="onChangeNameParam"
+                valueStateText="Заполните обязательное поле"/>
 
               <Label text="Переменная"/>
               <Input

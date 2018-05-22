@@ -182,6 +182,12 @@ sap.ui.define([
       this.getView().byId("paramsDialog").close();
     },
 
+    onChangeNameParam: function(oEvent) {
+      var oInput = oEvent.getSource();
+      var sState = oEvent.getParameter('value') ? 'None' : 'Error';
+      oInput.setValueState(sState);
+    },
+
     onUpdateParam: function() {
       var oParamData = this.mParamModel.getData();
       var oSendData = { id: oParamData._id, data: {} }; 

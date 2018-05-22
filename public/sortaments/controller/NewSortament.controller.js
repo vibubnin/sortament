@@ -90,6 +90,12 @@ sap.ui.define([
 				oRouter.navTo("beginSortament", {}, true);
 			}
     },
+
+    onChangeRequiredInput: function(oEvent) {
+      var oInput = oEvent.getSource();
+      var sState = oEvent.getParameter('value') ? 'None' : 'Error';
+      oInput.setValueState(sState);
+    },
     
     onAddHeader: function() {
       var oData = this.mHeadersModel.getData();
@@ -157,7 +163,9 @@ sap.ui.define([
         aCells.push(
           new sap.m.Input({ 
             value: '{mNewSortament>' + oColumn._id + '}',
-            valueLiveUpdate: true
+            valueLiveUpdate: true,
+            liveChange: this.onChangeRequiredInput.bind(this),
+            valueStateText: "Заполните обязательное поле"
           })
         );
       }, this);

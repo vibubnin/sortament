@@ -1,8 +1,9 @@
-const express = require("express");
-const bodyParser = require('body-parser');
-const fileUpload = require('express-fileupload');
-const port = 8000;
-const mongoose = require('mongoose');
+const express = require("express"),
+			bodyParser = require('body-parser'),
+			fileUpload = require('express-fileupload'),
+			port = 8000,
+			mongoose = require('mongoose');
+
 mongoose.Promise = global.Promise;
 
 const startServer = () => {
@@ -17,12 +18,11 @@ const startServer = () => {
 
   app.listen(port, () => {
 		console.log(`Server started on port ${port}`)
-	}) // => use callback function
+	})
 };
 
 const dbConnect = () => {
 	mongoose.connect('mongodb://localhost/sortament');
-
 	return mongoose.connection;
 };
 

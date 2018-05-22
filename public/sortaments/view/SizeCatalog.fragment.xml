@@ -94,7 +94,6 @@
 		</beginButton>
 		<endButton>
 			<Button
-				type="Reject"
 				text="Закрыть"
 				press="onCloseSizeCatalogDialog"/>
 		</endButton>	

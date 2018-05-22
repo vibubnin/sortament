@@ -33,11 +33,21 @@
           validated="true">
           <f:SimpleForm
             editable="true">
-            <Label text="Название"/>
-            <Input width="36rem" value="{mNewSortament>/name}" valueLiveUpdate="true"/>
+            <Label text="Название" required="true"/>
+            <Input 
+              width="36rem" 
+              value="{mNewSortament>/name}" 
+              valueLiveUpdate="true" 
+              liveChange="onChangeRequiredInput"
+              valueStateText="Заполните обязательное поле"/>
 
-            <Label text="Стандарт"/>
-            <Input width="36rem" value="{mNewSortament>/standart}" valueLiveUpdate="true"/>
+            <Label text="Стандарт" required="true"/>
+            <Input 
+              width="36rem" 
+              value="{mNewSortament>/standart}" 
+              valueLiveUpdate="true" 
+              liveChange="onChangeRequiredInput"
+              valueStateText="Заполните обязательное поле"/>
 
             <Label text="Изображение сечения"/>
             <u:FileUploader
